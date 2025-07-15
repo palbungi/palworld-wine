@@ -49,7 +49,7 @@ docker-compose -f /home/$(whoami)/docker-compose.yml up -d
 
 # Portainer 설치 및 실행(웹에서 서버관리)
 mkdir /home/$(whoami)/portainer
-wget -P /home/$(whoami)/portainer https://github.com/palbungi/palworld-wine/raw/refs/heads/main/portainer/docker-compose.yml
+wget -P /home/$(whoami)/portainer https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/portainer/docker-compose.yml
 docker-compose -f /home/$(whoami)/portainer/docker-compose.yml up -d
 
 # 설치파일 삭제
