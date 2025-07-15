@@ -27,7 +27,6 @@ wget -p /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/docker-compose.yml
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/default.env
 
-
 # 서버 재시작 스크립트 다운로드, 경로설정, 실행 권한 추가
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/regular_maintenance.sh
 sed -i "s|docker-compose.yml|/home/$(whoami)/docker-compose.yml|g" regular_maintenance.sh
@@ -54,7 +53,6 @@ rm PalDefender_ProtonWine.zip
 mkdir -p /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender
 wget -P /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/Config.json
 sed -i "s|127.0.0.1|$(who | awk '{print $5}' | tr -d '()')|g" /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender/Config.json
-
 
 # 서버설정 수정
 nano default.env
