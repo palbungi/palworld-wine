@@ -18,18 +18,18 @@ sudo chmod 666 /var/run/docker.sock
 # 팰월드 도커 다운로드
 mkdir -p /home/$(whoami)/includes
 mkdir -p /home/$(whoami)/scripts
-wget -p /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/colors.sh
-wget -p /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/config.sh
-wget -p /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/cron.sh
-wget -p /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/playerdetection.sh
-wget -p /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/rcon.sh
-wget -p /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/security.sh
-wget -p /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/server.sh
-wget -p /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/webhook.sh
-wget -p /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/scripts/backupmanager.sh
-wget -p /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/scripts/rconcli.sh
-wget -p /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/scripts/restart.sh
-wget -p /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/scripts/servermanager.sh
+wget -P /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/colors.sh
+wget -P /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/config.sh
+wget -P /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/cron.sh
+wget -P /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/playerdetection.sh
+wget -P /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/rcon.sh
+wget -P /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/security.sh
+wget -P /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/server.sh
+wget -P /home/$(whoami)/includes https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/includes/webhook.sh
+wget -P /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/scripts/backupmanager.sh
+wget -P /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/scripts/rconcli.sh
+wget -P /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/scripts/restart.sh
+wget -P /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/scripts/servermanager.sh
 wget https://raw.githubusercontent.com/ripps818/docker-palworld-dedicated-server-wine/refs/heads/master/entrypoint.sh
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/docker-compose.yml
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/default.env
