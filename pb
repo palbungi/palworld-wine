@@ -19,26 +19,26 @@ sed -i "s|docker-compose.yml|/home/$(whoami)/docker-compose.yml|g" regular_maint
 chmod +x /home/$(whoami)/regular_maintenance.sh
 
 # 서버 디렉토리 생성 및 설정파일 다운로드(Engine.ini 최적화, GameUserSettings.ini 서버저장 디렉토리 지정)
-mkdir -p /home/$(whoami)/palworld/Pal/Saved/Config/WindowsServer
-wget -P /home/$(whoami)/palworld/Pal/Saved/Config/WindowsServer https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/Engine.ini
-wget -P /home/$(whoami)/palworld/Pal/Saved/Config/WindowsServer https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/GameUserSettings.ini
+mkdir -p /home/$(whoami)/game/Pal/Saved/Config/WindowsServer
+wget -P /home/$(whoami)/game/Pal/Saved/Config/WindowsServer https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/Engine.ini
+wget -P /home/$(whoami)/game/Pal/Saved/Config/WindowsServer https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/GameUserSettings.ini
 
 # 차후 서버이동을 위해 서버저장 폴더 미리 생성(nano 화면에서 새 콘솔창으로 서버데이터 업로드)
-mkdir -p /home/$(whoami)/palworld/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF
+mkdir -p /home/$(whoami)/game/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF
 
 # 모드설치를 위한 UE4SS 다운로드 및 압축해제
-mkdir -p /home/$(whoami)/palworld/Pal/Binaries/Win64
+mkdir -p /home/$(whoami)/game/Pal/Binaries/Win64
 wget https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip
-unzip UE4SS-Palworld.zip -d "/home/$(whoami)/palworld/Pal/Binaries/Win64"
+unzip UE4SS-Palworld.zip -d "/home/$(whoami)/game/Pal/Binaries/Win64"
 rm UE4SS-Palworld.zip
 
 # 팰디펜더 최신버전 다운로드 및 압축해제
 wget https://github.com/Ultimeit/PalDefender/releases/latest/download/PalDefender_ProtonWine.zip
-unzip PalDefender_ProtonWine.zip -d "/home/$(whoami)/palworld/Pal/Binaries/Win64"
+unzip PalDefender_ProtonWine.zip -d "/home/$(whoami)/game/Pal/Binaries/Win64"
 rm PalDefender_ProtonWine.zip
-mkdir -p /home/$(whoami)/palworld/Pal/Binaries/Win64/PalDefender
-wget -P /home/$(whoami)/palworld/Pal/Binaries/Win64/PalDefender https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/Config.json
-sed -i "s|127.0.0.1|$(who | awk '{print $5}' | tr -d '()')|g" /home/$(whoami)/palworld/Pal/Binaries/Win64/PalDefender/Config.json
+mkdir -p /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender
+wget -P /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/Config.json
+sed -i "s|127.0.0.1|$(who | awk '{print $5}' | tr -d '()')|g" /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender/Config.json
 
 
 # 서버설정 수정
@@ -49,7 +49,7 @@ docker-compose -f /home/$(whoami)/docker-compose.yml up -d
 
 # Portainer 설치 및 실행(웹에서 서버관리)
 mkdir /home/$(whoami)/portainer
-wget -P /home/$(whoami)/portainer https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/portainer/docker-compose.yml
+wget -P /home/$(whoami)/portainer https://github.com/palbungi/palworld-wine/raw/refs/heads/main/portainer/docker-compose.yml
 docker-compose -f /home/$(whoami)/portainer/docker-compose.yml up -d
 
 # 설치파일 삭제
