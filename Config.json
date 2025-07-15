@@ -1,9 +1,7 @@
 {
     "version": "1.4.5",
     "MOTD": [
-        "{PlayerName}님 {ServerName}서버에 오신것을 환영합니다!",
-        "난이도: {Difficulty}",
-        "패널티: {DeathPenalty}"
+        "{PlayerName}님 {ServerName}에 오신것을 환영합니다!"
     ],
     "exitServerOnStartupFailure": true,
     "preventAdminPasswordInChat": true,
