@@ -1,0 +1,49 @@
+# 한국시간 설정
+sudo timedatectl set-timezone Asia/Seoul
+
+# 도커&도커컴포즈 설치
+sudo groupadd docker
+sudo usermod -aG docker $(whoami)
+sudo apt update && sudo apt -y upgrade && sudo apt install -y nano && sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && yes | sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.37.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo chmod 666 /var/run/docker.sock
+
+# 팰월드 도커 다운로드
+
+
+# 서버 재시작 스크립트 다운로드, 경로설정, 실행 권한 추가
+wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/regular_maintenance.sh
+sed -i "s|docker-compose.yml|/home/$(whoami)/docker-compose.yml|g" regular_maintenance.sh
+chmod +x /home/$(whoami)/regular_maintenance.sh
+
+# 서버 디렉토리 생성 및 설정파일 다운로드(Engine.ini 최적화, GameUserSettings.ini 서버저장 디렉토리 지정)
+mkdir -p /home/$(whoami)/palworld/Pal/Saved/Config/WindowsServer
+wget -P /home/$(whoami)/palworld/Pal/Saved/Config/WindowsServer https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/Engine.ini
+wget -P /home/$(whoami)/palworld/Pal/Saved/Config/WindowsServer https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/GameUserSettings.ini
+
+# 차후 서버이동을 위해 서버저장 폴더 미리 생성(nano 화면에서 새 콘솔창으로 서버데이터 업로드)
+mkdir -p /home/$(whoami)/palworld/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF
+
+# 서버설정 수정
+nano default.env
+
+# 팰월드 서버 시작
+docker-compose -f /home/$(whoami)/docker-compose.yml up -d
+
+# Portainer 설치 및 실행(웹에서 서버관리)
+mkdir /home/$(whoami)/portainer
+wget -P /home/$(whoami)/portainer https://github.com/palbungi/palworld-wine/raw/refs/heads/main/portainer/docker-compose.yml
+docker-compose -f /home/$(whoami)/portainer/docker-compose.yml up -d
+
+# 설치파일 삭제
+rm pb
+
+# 초보들을 위한 Portainer 접속 IP 안내
+clear
+echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
+echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
+echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
+echo "게임서버 접속 아이피: $(curl -s ifconfig.me):8211"
+echo "위 주소들 메모해두세요. 게임서버는 10분 후 접속해주세요."
+echo "이제 이 창은 닫아도 됩니다."
