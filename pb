@@ -4,7 +4,13 @@ sudo timedatectl set-timezone Asia/Seoul
 # 도커&도커컴포즈 설치
 sudo groupadd docker
 sudo usermod -aG docker $(whoami)
-sudo apt update && sudo apt -y upgrade && sudo apt install -y nano && sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && yes | sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io
+sudo apt update
+sudo apt -y upgrade
+sudo apt install -y nano
+sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common 
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo DEBIAN_FRONTEND=noninteractive add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.37.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 sudo chmod 666 /var/run/docker.sock
@@ -26,6 +32,7 @@ wget -p /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker
 wget -p /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/scripts/servermanager.sh
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/docker-compose.yml
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/default.env
+
 
 # 서버 재시작 스크립트 다운로드, 경로설정, 실행 권한 추가
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/regular_maintenance.sh
@@ -53,6 +60,7 @@ rm PalDefender_ProtonWine.zip
 mkdir -p /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender
 wget -P /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/Config.json
 sed -i "s|127.0.0.1|$(who | awk '{print $5}' | tr -d '()')|g" /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender/Config.json
+
 
 # 서버설정 수정
 nano default.env
