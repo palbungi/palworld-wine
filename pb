@@ -36,6 +36,10 @@ rm UE4SS-Palworld.zip
 wget https://github.com/Ultimeit/PalDefender/releases/latest/download/PalDefender_ProtonWine.zip
 unzip PalDefender_ProtonWine.zip -d "/home/$(whoami)/palworld/Pal/Binaries/Win64"
 rm PalDefender_ProtonWine.zip
+mkdir -p /home/$(whoami)/palworld/Pal/Binaries/Win64/PalDefender
+wget -P /home/$(whoami)/palworld/Pal/Binaries/Win64/PalDefender https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/Config.json
+sed -i "s|127.0.0.1|$(who | awk '{print $5}' | tr -d '()')|g" /home/$(whoami)/palworld/Pal/Binaries/Win64/PalDefender/Config.json
+
 
 # 서버설정 수정
 nano default.env
