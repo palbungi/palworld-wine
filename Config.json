@@ -1,9 +1,9 @@
 {
     "version": "1.4.5",
     "MOTD": [
-        "Welcome {PlayerName} to {ServerName}!",
-        "Difficulty: {Difficulty}",
-        "Death penalty: {DeathPenalty}"
+        "{PlayerName}님 {ServerName}서버에 오신것을 환영합니다!",
+        "난이도: {Difficulty}",
+        "패널티: {DeathPenalty}"
     ],
     "exitServerOnStartupFailure": true,
     "preventAdminPasswordInChat": true,
@@ -39,11 +39,11 @@
     "pvpMaxToPalDamage": 1000,
     "pveMaxToPalBanThreshold": 900000,
     "treeLimiter": 0.1,
-    "allowAdminCheats": false,
+    "allowAdminCheats": true,
     "allowGodmodeOnehit": false,
     "isChineseCmd": false,
     "announceConnections": false,
-    "dontAnnounceAdminConnections": true,
+    "dontAnnounceAdminConnections": false,
     "announcePunishments": false,
     "announcePlayerDeaths": false,
     "announceOpenOilrigBoxes": false,
@@ -54,8 +54,8 @@
     "chatBypassWait": true,
     "chatMessageMaxLen": 128,
     "useWhitelist": false,
-    "whitelistMessage": "You are not whitelisted. You can apply for whitelist at *insert your discord link or whatever here*",
-    "bannedMessage": "You are not welcome on this server :(",
+    "whitelistMessage": "화이트리스트에 등록되지 않았습니다. 여기에 *디스코드 링크 등을 삽입하세요*에서 화이트리스트를 신청할 수 있습니다.",
+    "bannedMessage": "이 서버에 오신 것을 환영하지 않습니다 :(",
     "steamidProtection": true,
     "bannedNames": [
         "anquan666",
