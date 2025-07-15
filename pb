@@ -6,7 +6,6 @@ sudo groupadd docker
 sudo usermod -aG docker $(whoami)
 sudo apt update
 sudo apt -y upgrade
-sudo apt install -y nano
 sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo DEBIAN_FRONTEND=noninteractive add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -30,9 +29,9 @@ wget -p /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker
 wget -p /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/scripts/rconcli.sh
 wget -p /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/scripts/restart.sh
 wget -p /home/$(whoami)/scripts https://raw.githubusercontent.com/jammsen/docker-palworld-dedicated-server/refs/heads/develop/scripts/servermanager.sh
+wget https://raw.githubusercontent.com/ripps818/docker-palworld-dedicated-server-wine/refs/heads/master/entrypoint.sh
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/docker-compose.yml
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/default.env
-
 
 # 서버 재시작 스크립트 다운로드, 경로설정, 실행 권한 추가
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/regular_maintenance.sh
@@ -47,7 +46,8 @@ wget -P /home/$(whoami)/game/Pal/Saved/Config/WindowsServer https://raw.githubus
 # 차후 서버이동을 위해 서버저장 폴더 미리 생성(nano 화면에서 새 콘솔창으로 서버데이터 업로드)
 mkdir -p /home/$(whoami)/game/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF
 
-# 모드설치를 위한 UE4SS 다운로드 및 압축해제
+# 모드설치를 위한 UE4SS,unzip 다운로드 및 압축해제
+sudo apt install -y unzip
 mkdir -p /home/$(whoami)/game/Pal/Binaries/Win64
 wget https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip
 unzip UE4SS-Palworld.zip -d "/home/$(whoami)/game/Pal/Binaries/Win64"
@@ -60,7 +60,6 @@ rm PalDefender_ProtonWine.zip
 mkdir -p /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender
 wget -P /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/Config.json
 sed -i "s|127.0.0.1|$(who | awk '{print $5}' | tr -d '()')|g" /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender/Config.json
-
 
 # 서버설정 수정
 nano default.env
