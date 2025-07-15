@@ -10,7 +10,8 @@ sudo chmod +x /usr/local/bin/docker-compose
 sudo chmod 666 /var/run/docker.sock
 
 # 팰월드 도커 다운로드
-
+wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/docker-compose.yml
+wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/default.env
 
 # 서버 재시작 스크립트 다운로드, 경로설정, 실행 권한 추가
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/regular_maintenance.sh
@@ -24,6 +25,17 @@ wget -P /home/$(whoami)/palworld/Pal/Saved/Config/WindowsServer https://raw.gith
 
 # 차후 서버이동을 위해 서버저장 폴더 미리 생성(nano 화면에서 새 콘솔창으로 서버데이터 업로드)
 mkdir -p /home/$(whoami)/palworld/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF
+
+# 모드설치를 위한 UE4SS 다운로드 및 압축해제
+mkdir -p /home/$(whoami)/palworld/Pal/Binaries/Win64
+wget https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip
+unzip UE4SS-Palworld.zip -d "/home/$(whoami)/palworld/Pal/Binaries/Win64"
+rm UE4SS-Palworld.zip
+
+# 팰디펜더 최신버전 다운로드 및 압축해제
+wget https://github.com/Ultimeit/PalDefender/releases/latest/download/PalDefender_ProtonWine.zip
+unzip PalDefender_ProtonWine.zip -d "/home/$(whoami)/palworld/Pal/Binaries/Win64"
+rm PalDefender_ProtonWine.zip
 
 # 서버설정 수정
 nano default.env
