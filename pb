@@ -5,7 +5,7 @@ sudo timedatectl set-timezone Asia/Seoul
 sudo groupadd docker
 sudo usermod -aG docker $(whoami)
 sudo apt update
-apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade -y
+sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade -y
 sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo DEBIAN_FRONTEND=noninteractive add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
