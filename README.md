@@ -2,4 +2,4 @@
 palworld google cloud for wine
 
 
-```curl -o pb https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/pb && bash pb setup```
+```wget -O pb https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/pb && bash pb setup```
