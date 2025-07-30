@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CRON_FILE="/tmp/mycron"
-SCRIPT_PATH="/home/$(whoami)/restart.sh"
+SCRIPT_PATH="/home/$(whoami)/regular_maintenance.sh"
 
 # 기존 크론 삭제
 clear
