@@ -73,7 +73,10 @@ rm pb
 # 팰월드 서버 재시작 설정 스크립트 다운로드 및 실행
 wget https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/timer.sh
 chmod +x /home/$(whoami)/timer.sh
+echo "화면을 지웁니다..."
+sleep 1
 clear
+
 bash timer.sh
 
 # 초보들을 위한 Portainer 접속 IP 안내
