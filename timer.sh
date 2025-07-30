@@ -66,3 +66,6 @@ fi
 crontab "$CRON_FILE"
 rm "$CRON_FILE"
 echo "팰월드 재시작 스크립트가 성공적으로 등록되었습니다."
+sudo systemctl start cron
+sudo systemctl enable cron
+sudo systemctl restart cron
