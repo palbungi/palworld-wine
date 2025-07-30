@@ -1,7 +1,7 @@
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 CRON_FILE="/tmp/mycron"
-SCRIPT_PATH="/home/$(whoami)/regular_maintenance.sh"
+SCRIPT_PATH="/home/$(whoami)/palworld-wine/regular_maintenance.sh"
 
 # 기존 크론 삭제
 clear
