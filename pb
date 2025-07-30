@@ -61,11 +61,7 @@ wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/ba
 chmod +x backup.sh
 USER_NAME=$(whoami)
 sed -i "s/\\\$(whoami)/${USER_NAME}/g" "backup.sh"
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-SCRIPT_PATH="$SCRIPT_DIR/backup.sh"
-CRON_JOB="30 * * * * /bin/bash $SCRIPT_PATH
-( sudo crontab -l 2>/dev/null | grep -v "$SCRIPT_PATH" ; echo "$CRON_JOB" ) | sudo crontab -
-
+wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/cron.sh && bash cron.sh && rm cron.sh
 
 # 팰월드 서버 재시작 설정 스크립트 다운로드 및 실행
 wget https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/timer.sh
