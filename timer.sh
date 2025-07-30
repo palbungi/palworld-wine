@@ -4,6 +4,7 @@ CRON_FILE="/tmp/mycron"
 SCRIPT_PATH="/home/$(whoami)/restart.sh"
 
 # 기존 크론 삭제
+clear
 crontab -r
 echo "기존 재시작 목록을 삭제했습니다."
 
