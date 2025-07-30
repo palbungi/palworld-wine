@@ -68,6 +68,8 @@ sed -i "s/\\\$(whoami)/palworld-wine/${USER_NAME}/g" "backup.sh"
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/cron.sh
 bash cron.sh
 rm cron.sh
+sudo systemctl start cron
+sudo systemctl enable cron
 
 # 팰월드 서버 재시작 설정 스크립트 다운로드 및 실행
 wget https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/timer.sh
