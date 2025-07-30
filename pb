@@ -52,9 +52,9 @@ wget -P /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender https://raw.githubus
 sed -i "s|127.0.0.1|$(who | awk '{print $5}' | tr -d '()')|g" /home/$(whoami)/game/Pal/Binaries/Win64/PalDefender/Config.json
 
 # 팰셰마 최신버전 다운로드 및 압축해제
-wget https://github.com/Okaetsu/PalSchema/releases/download/0.3.3/PalSchema_0.3.3.zip
-unzip PalSchema_0.3.3.zip -d "/home/$(whoami)/game/Pal/Binaries/Win64/ue4ss/Mods/"
-rm PalSchema_0.3.3.zip
+wget https://github.com/Okaetsu/PalSchema/releases/download/0.4.2/PalSchema_0.4.2.zip
+unzip PalSchema_0.4.2.zip -d "/home/$(whoami)/game/Pal/Binaries/Win64/ue4ss/Mods/"
+rm PalSchema_0.4.2.zip
 
 # 서버설정 수정
 nano default.env
