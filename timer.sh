@@ -82,6 +82,7 @@ while true; do
         for TIME in "${TIMES[@]}"; do
             HOUR=$(echo "$TIME" | cut -d':' -f1)
             MIN=$(echo "$TIME" | cut -d':' -f2)
+            echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
             echo "$MIN $HOUR * * * $SCRIPT_PATH" >> "$CRON_FILE"
         done
         break
