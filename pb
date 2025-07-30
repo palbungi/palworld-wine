@@ -56,8 +56,16 @@ mkdir /home/$(whoami)/portainer
 wget -P /home/$(whoami)/portainer https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/portainer/docker-compose.yml
 docker-compose -f /home/$(whoami)/portainer/docker-compose.yml up -d
 
-# 설치파일 삭제
-rm pb
+# 팰월드 백업 스크립트 다운로드 및 크론탭에 30분에 한번 백업 등록
+wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/backup.sh
+chmod +x backup.sh
+USER_NAME=$(whoami)
+sed -i "s/\\\$(whoami)/${USER_NAME}/g" "backup.sh"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_PATH="$SCRIPT_DIR/backup.sh"
+CRON_JOB="30 * * * * /bin/bash $SCRIPT_PATH
+( sudo crontab -l 2>/dev/null | grep -v "$SCRIPT_PATH" ; echo "$CRON_JOB" ) | sudo crontab -
+
 
 # 팰월드 서버 재시작 설정 스크립트 다운로드 및 실행
 wget https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/timer.sh
@@ -65,7 +73,6 @@ chmod +x /home/$(whoami)/timer.sh
 echo "화면을 지웁니다..."
 sleep 1
 clear
-
 bash timer.sh
 
 # 초보들을 위한 Portainer 접속 IP 안내
@@ -76,3 +83,6 @@ echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
 echo "게임서버 접속 아이피: $(curl -s ifconfig.me):8211"
 echo "위 주소들 메모해두세요. 게임서버는 10분 후 접속해주세요."
 echo "이제 이 창은 닫아도 됩니다."
+
+# 설치파일 삭제
+rm pb
