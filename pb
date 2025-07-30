@@ -26,6 +26,10 @@ sudo apt install -y unzip
 mkdir -p /home/$(whoami)/game/Pal/Binaries/Win64
 wget https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip
 unzip UE4SS-Palworld.zip -d "/home/$(whoami)/game/Pal/Binaries/Win64"
+shopt -s dotglob
+mv /home/$(whoami)/game/Pal/Binaries/Win64/UE4SS-Palworld/* /home/$(whoami)/game/Pal/Binaries/Win64/
+shopt -u dotglob
+rm -r UE4SS-Palworld
 rm UE4SS-Palworld.zip
 
 # 팰디펜더 최신버전 다운로드 및 압축해제
