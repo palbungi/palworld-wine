@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 기본 경로
-BASE_DIR="/home/$(whoami)/game/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF"
+BASE_DIR="/home/$(whoami)/palworld-wine/game/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF"
 BACKUP_ROOT="$BASE_DIR/backup"
 
 # 날짜 및 시간
