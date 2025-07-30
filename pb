@@ -70,6 +70,11 @@ echo "화면을 지웁니다..."
 sleep 1
 clear
 bash timer.sh
+sed -i -e '$a\\n# 서버 재시작' \
+       -e '$a\\ndocker-compose -f "${YAML_FILE}" pull' \
+       -e '$a\\ndocker-compose -f "${YAML_FILE}" down' \
+       -e '$a\\ndocker-compose -f "${YAML_FILE}" up -d' \
+       /home/$(whoami)/timer.sh
 
 # 초보들을 위한 Portainer 접속 IP 안내
 clear
