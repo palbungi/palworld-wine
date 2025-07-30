@@ -4,55 +4,55 @@ YAML_FILE="docker-compose.yml"
 CONTAINER_NAME="palworld-wine-server"
 
 # 10분
-docker exec -i ${CONTAINER_NAME} rcon-cli "Broadcast Server_will_restart_in_10_minutes"
+docker exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_10_minutes"
 
 # 5분
 sleep 300
-docker exec -i ${CONTAINER_NAME} rcon-cli "Broadcast Server_will_restart_in_5_minutes"
+docker exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_5_minutes"
 
 # 3분
 sleep 120
-docker exec -i ${CONTAINER_NAME} rcon-cli "Broadcast Server_will_restart_in_3_minutes"
+docker exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_3_minutes"
 
 # 2분
 sleep 60
-docker exec -i ${CONTAINER_NAME} rcon-cli "Broadcast Server_will_restart_in_2_minutes"
+docker exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_2_minutes"
 
 # 1분
 sleep 60
-docker exec -i ${CONTAINER_NAME} rcon-cli "Broadcast Server_will_restart_in_60_seconds"
+docker exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_60_seconds"
 
 # 저장
-docker exec -i $CONTAINER_NAME rcon-cli save
+docker exec -i $CONTAINER_NAME rconcli save
 
 # 10초
 sleep 50
-docker exec -i ${CONTAINER_NAME} rcon-cli "Broadcast Server_will_restart_in_10_seconds"
+docker exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_10_seconds"
 
 sleep 5
 
-docker exec -i ${CONTAINER_NAME} rcon-cli "Broadcast Server_will_restart_in_5_seconds"
+docker exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_5_seconds"
 
 sleep 1
 
-docker exec -i ${CONTAINER_NAME} rcon-cli "Broadcast Server_will_restart_in_4_seconds"
+docker exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_4_seconds"
 
 sleep 1
 
-docker exec -i ${CONTAINER_NAME} rcon-cli "Broadcast Server_will_restart_in_3_seconds"
+docker exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_3_seconds"
 
 sleep 1
 
-docker exec -i ${CONTAINER_NAME} rcon-cli "Broadcast Server_will_restart_in_2_seconds"
+docker exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_2_seconds"
 
 sleep 1
 
-docker exec -i ${CONTAINER_NAME} rcon-cli "Broadcast Server_will_restart_in_1_seconds"
+docker exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_1_seconds"
 
 sleep 1
 
 # 서버 종료
-docker exec -i $CONTAINER_NAME rcon-cli "Broadcast Server_is_shutting_down_for_maintance"
+docker exec -i $CONTAINER_NAME rconcli "Broadcast Server_is_shutting_down_for_maintance"
 
 # 5초 대기
 sleep 5
