@@ -83,16 +83,6 @@ mkdir /home/$(whoami)/palworld-wine/portainer
 wget -P /home/$(whoami)/palworld-wine/portainer https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/portainer/docker-compose.yml
 docker-compose -f /home/$(whoami)/palworld-wine/portainer/docker-compose.yml up -d
 
-# 팰월드 백업 스크립트 다운로드 및 크론탭에 30분에 한번 백업 등록
-wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/backup.sh
-chmod +x backup.sh
-sed -i "s/YOUR_USERNAME/$(whoami)/g" backup.sh
-wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/cron.sh
-bash cron.sh
-rm cron.sh
-sudo systemctl start cron
-sudo systemctl enable cron
-
 # 팰월드 서버 재시작 설정 스크립트 다운로드 및 실행
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/timer.sh
 chmod +x /home/$(whoami)/palworld-wine/timer.sh
@@ -101,6 +91,8 @@ echo "화면을 지웁니다..."
 sleep 1
 clear
 bash timer.sh
+sudo systemctl start cron
+sudo systemctl enable cron
 
 # 초보들을 위한 Portainer 접속 IP 안내
 clear
