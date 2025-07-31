@@ -6,8 +6,17 @@ mkdir palworld-wine
 cd palworld-wine
 
 # 리눅스 업데이트 & 업그레이드
-sudo apt update 
-sudo DEBIAN_FRONTEND=noninteractive APT_LISTCHANGES_FRONTEND=none apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade -y
+echo "tzdata tzdata/Areas select Asia" | sudo debconf-set-selections
+echo "tzdata tzdata/Zones/Asia select Beirut" | sudo debconf-set-selections
+sudo apt-get -y install debconf-utils
+sudo debconf-set-selections <<< 'debconf debconf/frontend select Noninteractive'
+export DEBIAN_FRONTEND=noninteractive
+
+sudo apt-get update
+sudo apt-get -y -o Dpkg::Options::="--force-confdef" \
+                -o Dpkg::Options::="--force-confold" \
+                upgrade -y
+
 
 # 도커&도커컴포즈 설치
 sudo groupadd docker
