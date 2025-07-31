@@ -96,13 +96,13 @@ wget -P /home/$(whoami)/palworld-wine/portainer https://raw.githubusercontent.co
 docker-compose -f /home/$(whoami)/portainer/docker-compose.yml up -d
 
 # 팰월드 서버 재시작 설정 스크립트 다운로드 및 실행
-wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/timer.sh
-chmod +x /home/$(whoami)/palworld-wine/timer.sh
+wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/timer.sh
+chmod +x /home/$(whoami)/timer.sh
 sed -i "s/YOUR_USERNAME/$(whoami)/g" timer.sh
 echo "화면을 지웁니다..."
 sleep 1
 clear
-bash timer.sh
+bash /home/$(whoami)/timer.sh
 sudo systemctl start cron
 sudo systemctl enable cron
 
