@@ -42,7 +42,8 @@ wget -P /home/$(whoami)/palworld-wine/game/Pal/Saved/Config/WindowsServer https:
 wget -P /home/$(whoami)/palworld-wine/game/Pal/Saved/Config/WindowsServer https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/GameUserSettings.ini
 
 # 차후 서버이동을 위해 서버저장 폴더 미리 생성(nano 화면에서 새 콘솔창으로 서버데이터 업로드)
-mkdir -p /home/$(whoami)/palworld-wine/game/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF
+mkdir -p /home/$(whoami)/palworld-wine/game/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF/player
+mkdir -p /home/$(whoami)/palworld-wine/game/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF/backup
 
 # 모드설치를 위한 UE4SS,unzip 다운로드 및 압축해제
 sudo apt install -y unzip
