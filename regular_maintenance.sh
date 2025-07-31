@@ -13,6 +13,9 @@ CONTAINER_NAME="palworld-wine-server"
 # 로그 시작 메시지
 ${ECHO_BIN} "$(${DOCKER_BIN} exec -i ${CONTAINER_NAME} /usr/bin/date '+%Y-%m-%d %H:%M:%S') - Server restart script started."
 
+# 10분(600초)후 서버 종료 명령어 
+${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Shutdown 600" || { ${ECHO_BIN} "Shutdown 600" ; exit 1; }
+
 # 10분 경고 (rconcli 경로도 컨테이너 내부 절대 경로로 명시)
 ${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_10_minutes" || { ${ECHO_BIN} "ERROR: Failed to broadcast 10 min message." ; exit 1; }
 
@@ -69,18 +72,5 @@ ${SLEEP_BIN} 1
 
 ${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_1_seconds" || { ${ECHO_BIN} "ERROR: Failed to broadcast 1s message." ; exit 1; }
 
-${SLEEP_BIN} 1
-
-# 서버 종료 메시지
-${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_is_shutting_down_for_maintance" || { ${ECHO_BIN} "ERROR: Failed to broadcast shutdown message." ; exit 1; }
-
-# 5초 대기
-${SLEEP_BIN} 5
-
-# 서버 재시작
-${DOCKER_COMPOSE_BIN} -f "${YAML_FILE}" pull || { ${ECHO_BIN} "ERROR: Failed to pull docker images." ; exit 1; }
-${DOCKER_COMPOSE_BIN} -f "${YAML_FILE}" down || { ${ECHO_BIN} "ERROR: Failed to stop docker containers." ; exit 1; }
-${DOCKER_COMPOSE_BIN} -f "${YAML_FILE}" up -d || { ${ECHO_BIN} "ERROR: Failed to start docker containers." ; exit 1; }
-
 # 로그 종료 메시지
-${ECHO_BIN} "$(${DOCKER_BIN} exec -i ${CONTAINER_NAME} /usr/bin/date '+%Y-%m-%d %H:%M:%S') - Server restart script finished."
+${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_is_shutting_down_for_maintance" || { ${ECHO_BIN} "ERROR: Failed to broadcast shutdown message." ; exit 1; }
