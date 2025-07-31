@@ -99,6 +99,5 @@ echo "위 주소들 메모해두세요. 게임서버는 10분 후 접속해주�
 echo "이제 이 창은 닫아도 됩니다."
 
 # 설치파일 삭제
-cd /home/$(whoami)/palworld-wine
 rm /home/$(whoami)/pb
-
+cd /home/$(whoami)/palworld-wine
