@@ -72,9 +72,18 @@ unzip PalSchema_0.4.2.zip -d "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Wi
 rm PalSchema_0.4.2.zip
 
 # 모드관리 편의를 위한 심불릭링크 
-ln -s /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods/ /home/$(whoami)/palworld-wine/UE4SSMods
-ln -s /home/$(whoami)/palworld-wine/game/Pal/Content/Paks/LogicMods/ /home/$(whoami)/palworld-wine/LogicMods
-ln -s /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender/ /home/$(whoami)/palworld-wine/PalDefender
+ln -s /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods "/home/$(whoami)/palworld-wine/>>> UE4SS 모드 <<<"
+chmod +x "/home/$(whoami)/palworld-wine/>>> UE4SS 모드 <<<"
+ln -s /home/$(whoami)/palworld-wine/game/Pal/Content/Paks/LogicMods "/home/$(whoami)/palworld-wine/>>> PAK 모드 <<<"
+chmod +x "/home/$(whoami)/palworld-wine/>>> PAK 모드 <<<"
+ln -s /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender "/home/$(whoami)/palworld-wine/>>> 팰디펜더 <<<"
+chmod +x "/home/$(whoami)/palworld-wine/>>> 팰디펜더 <<<"
+ln -s /home/$(whoami)/palworld-wine "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods/>>> 처음으로 돌아가기 <<<"
+chmod +x "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods/>>> 처음으로 돌아가기 <<<"
+ln -s /home/$(whoami)/palworld-wine "/home/$(whoami)/palworld-wine/game/Pal/Content/Paks/LogicMods/>>> 처음으로 돌아가기 <<<"
+chmod +x "/home/$(whoami)/palworld-wine/game/Pal/Content/Paks/LogicMods/>>> 처음으로 돌아가기 <<<"
+ln -s /home/$(whoami)/palworld-wine "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender/>>> 처음으로 돌아가기 <<<"
+chmod +x "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender/>>> 처음으로 돌아가기 <<<"
 
 # 서버설정 수정
 nano default.env
