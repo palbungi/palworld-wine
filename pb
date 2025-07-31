@@ -11,12 +11,10 @@ echo "tzdata tzdata/Zones/Asia select Beirut" | sudo debconf-set-selections
 sudo apt-get -y install debconf-utils
 sudo debconf-set-selections <<< 'debconf debconf/frontend select Noninteractive'
 export DEBIAN_FRONTEND=noninteractive
-
 sudo apt-get update
 sudo apt-get -y -o Dpkg::Options::="--force-confdef" \
                 -o Dpkg::Options::="--force-confold" \
                 upgrade -y
-
 
 # 도커&도커컴포즈 설치
 sudo groupadd docker
@@ -26,7 +24,6 @@ sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 sudo chmod 666 /var/run/docker.sock
 
-
 # 팰월드 도커 다운로드
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/docker-compose.yml
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/default.env
@@ -35,8 +32,8 @@ wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/de
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/regular_maintenance.sh
 chmod +x /home/$(whoami)/palworld-wine/regular_maintenance.sh
 sed -i "s/YOUR_USERNAME/$(whoami)/g" regular_maintenance.sh
-wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/restart.sh
-chmod +x /home/$(whoami)/palworld-wine/restart.sh
+wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/restart.sh
+chmod +x /home/$(whoami)/restart.sh
 sed -i "s/YOUR_USERNAME/$(whoami)/g" restart.sh
 
 # 서버 디렉토리 생성 및 설정파일 다운로드(Engine.ini 최적화, GameUserSettings.ini 서버저장 디렉토리 지정)
@@ -71,18 +68,18 @@ wget https://github.com/Okaetsu/PalSchema/releases/download/0.4.2/PalSchema_0.4.
 unzip PalSchema_0.4.2.zip -d "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods/"
 rm PalSchema_0.4.2.zip
 
-# 모드관리 편의를 위한 심불릭링크 
-ln -s /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods "/home/$(whoami)/palworld-wine/>>> UE4SS 모드 <<<"
-chmod +x "/home/$(whoami)/palworld-wine/>>> UE4SS 모드 <<<"
-ln -s /home/$(whoami)/palworld-wine/game/Pal/Content/Paks/LogicMods "/home/$(whoami)/palworld-wine/>>> PAK 모드 <<<"
-chmod +x "/home/$(whoami)/palworld-wine/>>> PAK 모드 <<<"
-ln -s /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender "/home/$(whoami)/palworld-wine/>>> 팰디펜더 <<<"
-chmod +x "/home/$(whoami)/palworld-wine/>>> 팰디펜더 <<<"
-ln -s /home/$(whoami)/palworld-wine "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods/>>> 처음으로 돌아가기 <<<"
+# 모드관리 편의를 위한 심볼릭링크 
+ln -s /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods "/home/$(whoami)/>>> UE4SS 모드 <<<"
+chmod +x "/home/$(whoami)/>>> UE4SS 모드 <<<"
+ln -s /home/$(whoami)/palworld-wine/game/Pal/Content/Paks/LogicMods "/home/$(whoami)/>>> PAK 모드 <<<"
+chmod +x "/home/$(whoami)/>>> PAK 모드 <<<"
+ln -s /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender "/home/$(whoami)/>>> 팰디펜더 <<<"
+chmod +x "/home/$(whoami)/>>> 팰디펜더 <<<"
+ln -s /home/$(whoami)/"/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods/>>> 처음으로 돌아가기 <<<"
 chmod +x "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods/>>> 처음으로 돌아가기 <<<"
-ln -s /home/$(whoami)/palworld-wine "/home/$(whoami)/palworld-wine/game/Pal/Content/Paks/LogicMods/>>> 처음으로 돌아가기 <<<"
+ln -s /home/$(whoami)/"/home/$(whoami)/palworld-wine/game/Pal/Content/Paks/LogicMods/>>> 처음으로 돌아가기 <<<"
 chmod +x "/home/$(whoami)/palworld-wine/game/Pal/Content/Paks/LogicMods/>>> 처음으로 돌아가기 <<<"
-ln -s /home/$(whoami)/palworld-wine "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender/>>> 처음으로 돌아가기 <<<"
+ln -s /home/$(whoami)/"/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender/>>> 처음으로 돌아가기 <<<"
 chmod +x "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender/>>> 처음으로 돌아가기 <<<"
 
 # 서버설정 수정
@@ -93,8 +90,8 @@ sed -i "s/^REGION=.*/REGION=$(curl -s ifconfig.me)/" default.env
 docker-compose -f /home/$(whoami)/palworld-wine/docker-compose.yml up -d
 
 # Portainer 설치 및 실행(웹에서 서버관리)
-mkdir /home/$(whoami)/portainer
-wget -P /home/$(whoami)/portainer https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/portainer/docker-compose.yml
+mkdir /home/$(whoami)/palworld-wine/portainer
+wget -P /home/$(whoami)/palworld-wine/portainer https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/portainer/docker-compose.yml
 docker-compose -f /home/$(whoami)/portainer/docker-compose.yml up -d
 
 # 팰월드 서버 재시작 설정 스크립트 다운로드 및 실행
@@ -111,12 +108,12 @@ sudo systemctl enable cron
 # 초보들을 위한 Portainer 접속 IP 안내
 clear
 echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
-echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
-echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
+
 echo "게임서버 접속 아이피: $(curl -s ifconfig.me):8211"
-echo "위 주소들 메모해두세요. 게임서버는 10분 후 접속해주세요."
+
+echo "위 주소들을 메모 해주세요. 게임서버는 최소 5분 후 접속해주세요."
+
 echo "이제 이 창은 닫아도 됩니다."
 
 # 설치파일 삭제
 rm /home/$(whoami)/pb
-cd /home/$(whoami)/palworld-wine
