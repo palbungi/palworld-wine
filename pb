@@ -59,6 +59,8 @@ wget https://github.com/Okaetsu/PalSchema/releases/download/0.4.2/PalSchema_0.4.
 unzip PalSchema_0.4.2.zip -d "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods/"
 rm PalSchema_0.4.2.zip
 
+sleep 10
+
 # 서버설정 수정
 nano default.env
 sed -i "s/^REGION=.*/REGION=$(curl -s ifconfig.me)/" default.env
