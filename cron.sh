@@ -3,6 +3,11 @@
 # 스크립트가 있는 디렉토리와 backup.sh 경로
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BACKUP_SCRIPT_PATH="$SCRIPT_DIR/backup.sh" # backup.sh 경로
+BACKUP_LOG_PATH="$SCRIPT_DIR/backup.log" # backup.sh 경로
+
+# backup.log 생성 및 실행 권한 부여
+touch "$BACKUP_LOG_PATH"
+chmod +x "$BACKUP_LOG_PATH" || { echo "ERROR: Failed to set executable permission on $BACKUP_SCRIPT_PATH" ; exit 1; }
 
 # backup.sh 에 실행 권한 부여
 chmod +x "$BACKUP_SCRIPT_PATH" || { echo "ERROR: Failed to set executable permission on $BACKUP_SCRIPT_PATH" ; exit 1; }
@@ -15,6 +20,6 @@ CRON_JOB="30 * * * * $BACKUP_SCRIPT_PATH >> SCRIPT_DIR/backup.log 2>&1"
 (sudo crontab -l 2>/dev/null; echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"; echo "$CRON_JOB") | sudo crontab -
 
 echo "Cron job for $BACKUP_SCRIPT_PATH added/updated."
-echo "Check /var/log/backup_cron.log for script output and errors."
+echo "Check BACKUP_LOG_PATH for script output and errors."
 
 sudo systemctl restart cron
