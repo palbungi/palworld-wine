@@ -10,37 +10,17 @@ ECHO_BIN="/usr/bin/echo" # 로깅을 위해 추가
 YAML_FILE="/home/YOUR_USERNAME/palworld-wine/docker-compose.yml" # docker-compose.yml 파일의 실제 절대 경로
 CONTAINER_NAME="palworld-wine-server"
 
-# 로그 시작 메시지
-${ECHO_BIN} "$(${DOCKER_BIN} exec -i ${CONTAINER_NAME} /usr/bin/date '+%Y-%m-%d %H:%M:%S') - Server restart script started."
+# 시작 메시지
+echo "5초 후 서버가 재시작 됩니다"
 
-# 10초 서버 종료 명령어 
-${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Shutdown 10" || { ${ECHO_BIN} "Shutdown 10" ; exit 1; }
-
-# 10초 경고
-${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_10_seconds" || { ${ECHO_BIN} "ERROR: Failed to broadcast 10s message." ; exit 1; }
-
-# 서버 저장
+# 서버 저장시간 5초대기
 ${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Save" || { ${ECHO_BIN} "Save" ; exit 1; }
-
 ${SLEEP_BIN} 5
 
-${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_5_seconds" || { ${ECHO_BIN} "ERROR: Failed to broadcast 5s message." ; exit 1; }
+# 도커 재시작
+${DOCKER_COMPOSE_BIN} -f "${YAML_FILE}" pull || { ${ECHO_BIN} "ERROR: Failed to pull docker images." ; exit 1; }
+${DOCKER_COMPOSE_BIN} -f "${YAML_FILE}" down || { ${ECHO_BIN} "ERROR: Failed to stop docker containers." ; exit 1; }
+${DOCKER_COMPOSE_BIN} -f "${YAML_FILE}" up -d || { ${ECHO_BIN} "ERROR: Failed to start docker containers." ; exit 1; }
 
-${SLEEP_BIN} 1
-
-${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_4_seconds" || { ${ECHO_BIN} "ERROR: Failed to broadcast 4s message." ; exit 1; }
-
-${SLEEP_BIN} 1
-
-${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_3_seconds" || { ${ECHO_BIN} "ERROR: Failed to broadcast 3s message." ; exit 1; }
-
-${SLEEP_BIN} 1
-
-${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_2_seconds" || { ${ECHO_BIN} "ERROR: Failed to broadcast 2s message." ; exit 1; }
-
-${SLEEP_BIN} 1
-
-${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_will_restart_in_1_seconds" || { ${ECHO_BIN} "ERROR: Failed to broadcast 1s message." ; exit 1; }
-
-# 로그 종료 메시지
-${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Broadcast Server_is_shutting_down_for_maintance" || { ${ECHO_BIN} "ERROR: Failed to broadcast shutdown message." ; exit 1; }
+# 서버 재시작 알림
+${ECHO_BIN} "서버가 재시작 되었습니다. 최소 3분 후 게임에 접속해주세요. "
