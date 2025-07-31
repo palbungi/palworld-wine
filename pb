@@ -61,6 +61,7 @@ rm PalSchema_0.4.2.zip
 
 # 서버설정 수정
 nano default.env
+sed -i "s/^REGION=.*/REGION=$(curl -s ifconfig.me)/" default.env
 
 # 팰월드 서버 시작
 docker-compose -f /home/$(whoami)/palworld-wine/docker-compose.yml up -d
