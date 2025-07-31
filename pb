@@ -83,6 +83,7 @@ sudo systemctl enable cron
 # 팰월드 서버 재시작 설정 스크립트 다운로드 및 실행
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/timer.sh
 chmod +x /home/$(whoami)/palworld-wine/timer.sh
+sed -i "s/YOUR_USERNAME/$(whoami)/g" timer.sh
 echo "화면을 지웁니다..."
 sleep 1
 clear
