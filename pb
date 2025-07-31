@@ -31,10 +31,11 @@ wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/de
 # 서버 재시작 스크립트 다운로드, 경로설정, 실행 권한 추가
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/regular_maintenance.sh
 chmod +x /home/$(whoami)/palworld-wine/regular_maintenance.sh
-sed -i "s/YOUR_USERNAME/$(whoami)/g" /home/$(whoami)/regular_maintenance.sh
+USERNAME=$(whoami)
+sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/palworld-wine/regular_maintenance.sh
 wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/restart.sh
 chmod +x /home/$(whoami)/restart.sh
-sed -i "s/YOUR_USERNAME/$(whoami)/g" /home/$(whoami)/restart.sh
+sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/restart.sh
 
 # 서버 디렉토리 생성 및 설정파일 다운로드(Engine.ini 최적화, GameUserSettings.ini 서버저장 디렉토리 지정)
 mkdir -p /home/$(whoami)/palworld-wine/game/Pal/Saved/Config/WindowsServer
@@ -93,12 +94,12 @@ docker-compose -f /home/$(whoami)/palworld-wine/docker-compose.yml up -d
 # Portainer 설치 및 실행(웹에서 서버관리)
 mkdir /home/$(whoami)/palworld-wine/portainer
 wget -P /home/$(whoami)/palworld-wine/portainer https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/portainer/docker-compose.yml
-docker-compose -f /home/$(whoami)/portainer/docker-compose.yml up -d
+docker-compose -f /home/$(whoami)/palworld-wine/portainer/docker-compose.yml up -d
 
 # 팰월드 서버 재시작 설정 스크립트 다운로드 및 실행
 wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/timer.sh
 chmod +x /home/$(whoami)/timer.sh
-sed -i "s/YOUR_USERNAME/$(whoami)/g" /home/$(whoami)/timer.sh
+sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/timer.sh
 echo "화면을 지웁니다..."
 sleep 1
 # clear
