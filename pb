@@ -94,7 +94,7 @@ chmod +x /home/$(whoami)/timer.sh
 sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/timer.sh
 echo "화면을 지웁니다..."
 sleep 1
-# clear
+clear
 bash /home/$(whoami)/timer.sh
 sudo systemctl start cron
 sudo systemctl enable cron
@@ -108,13 +108,12 @@ wget -P /home/$(whoami)/palworld-wine/portainer https://raw.githubusercontent.co
 docker-compose -f /home/$(whoami)/palworld-wine/portainer/docker-compose.yml up -d
 
 # 초보들을 위한 Portainer 접속 IP 안내
-# clear
+clear
 echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
-
+echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
+echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
 echo "게임서버 접속 아이피: $(curl -s ifconfig.me):8211"
-
 echo "위 주소들을 메모 해주세요. 게임서버는 최소 5분 후 접속해주세요."
-
 echo "이제 이 창은 닫아도 됩니다."
 
 # 설치파일 삭제
