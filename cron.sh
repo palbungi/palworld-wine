@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# 현재 디렉토리의 절대 경로 구하기
+# 스크립트가 있는 디렉토리와 backup.sh 경로
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-SCRIPT_PATH="$SCRIPT_DIR/backup.sh"
+BACKUP_SCRIPT_PATH="$SCRIPT_DIR/backup.sh" # backup.sh 경로
 
-# 실행 권한 부여
-chmod +x "$SCRIPT_PATH"
+# backup.sh 에 실행 권한 부여
+chmod +x "$BACKUP_SCRIPT_PATH" || { echo "ERROR: Failed to set executable permission on $BACKUP_SCRIPT_PATH" ; exit 1; }
 
-# 크론탭 명령어 구성
-CRON_JOB="30 * * * * $SCRIPT_PATH"
+# 크론탭 명령어 구성 (로그 리다이렉션 포함)
+# 30분마다 실행되도록 예시: "30 * * * *"
+CRON_JOB="30 * * * * $BACKUP_SCRIPT_PATH >> SCRIPT_DIR/backup.log 2>&1"
 
-# 기존 크론탭에서 중복 제거 후 새 항목 추가 + PATH 설정 추가
-( 
-  echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"  
-  echo "$CRON_JOB"
-) | sudo crontab -
-sudo systemctl start cron
-sudo systemctl enable cron
+# 기존 크론탭 내용을 가져와서 새로운 항목 추가 (안전하게)
+(sudo crontab -l 2>/dev/null; echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"; echo "$CRON_JOB") | sudo crontab -
+
+echo "Cron job for $BACKUP_SCRIPT_PATH added/updated."
+echo "Check /var/log/backup_cron.log for script output and errors."
+
 sudo systemctl restart cron
