@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT_PATH="/home/$(whoami)/palworld-wine/regular_maintenance.sh"
+SCRIPT_PATH="/home/YOUR_USERNAME/palworld-wine/regular_maintenance.sh"
 CRON_FILE="/tmp/mycron"
 
 # 기존 크론 삭제
