@@ -8,6 +8,7 @@ ADMIN_PASSWORD=$(grep "^ADMIN_PASSWORD=" "$CONFIG_FILE" | cut -d= -f2)
 
 if [ "$ADMIN_PASSWORD" == "adminpasswd" ]; then
     clear
+    echo
     read -s -p "운영자 비밀번호를 입력하세요: " NEW_PASSWORD
     echo
     sed -i "s/^ADMIN_PASSWORD=.*/ADMIN_PASSWORD=$NEW_PASSWORD/" "$CONFIG_FILE"
