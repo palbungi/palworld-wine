@@ -24,8 +24,8 @@ wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/de
 
 # 서버 재시작 스크립트 다운로드, 경로설정, 실행 권한 추가
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/regular_maintenance.sh
-sed -i "s|docker-compose.yml|/home/$(whoami)/palworld-wine/docker-compose.yml|g" regular_maintenance.sh
 chmod +x /home/$(whoami)/palworld-wine/regular_maintenance.sh
+sed -i "s/YOUR_USERNAME/$(whoami)/g" regular_maintenance.sh
 
 # 서버 디렉토리 생성 및 설정파일 다운로드(Engine.ini 최적화, GameUserSettings.ini 서버저장 디렉토리 지정)
 mkdir -p /home/$(whoami)/palworld-wine/game/Pal/Saved/Config/WindowsServer
