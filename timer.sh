@@ -1,7 +1,7 @@
 #!/bin/bash
 
-CONFIG_FILE="/home/ubuntu/config.env"
-SCRIPT_FILE="/home/ubuntu/regular_maintenance.sh"
+CONFIG_FILE="/home/YOUR_USERNAME/config.env"
+SCRIPT_FILE="/home/YOUR_USERNAME/regular_maintenance.sh"
 
 # 1. Check ADMIN_PASSWORD
 ADMIN_PASSWORD=$(grep "^ADMIN_PASSWORD=" "$CONFIG_FILE" | cut -d= -f2)
