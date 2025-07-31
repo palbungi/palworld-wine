@@ -100,3 +100,4 @@ echo "이제 이 창은 닫아도 됩니다."
 
 # 설치파일 삭제
 rm /home/$(whoami)/pb
+cd /home/$(whoami)/palworld-wine
