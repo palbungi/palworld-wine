@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONFIG_FILE="/home/YOUR_USERNAME/config.env"
+CONFIG_FILE="/home/YOUR_USERNAME/default.env"
 SCRIPT_FILE="/home/YOUR_USERNAME/regular_maintenance.sh"
 
 # 1. Check ADMIN_PASSWORD
