@@ -84,9 +84,9 @@ sed -i "s/^REGION=.*/REGION=$(curl -s ifconfig.me)/" default.env
 docker-compose -f /home/$(whoami)/palworld-wine/docker-compose.yml up -d
 
 # Portainer 설치 및 실행(웹에서 서버관리)
-mkdir /home/$(whoami)/palworld-wine/portainer
-wget -P /home/$(whoami)/palworld-wine/portainer https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/portainer/docker-compose.yml
-docker-compose -f /home/$(whoami)/palworld-wine/portainer/docker-compose.yml up -d
+mkdir /home/$(whoami)/portainer
+wget -P /home/$(whoami)/portainer https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/portainer/docker-compose.yml
+docker-compose -f /home/$(whoami)/portainer/docker-compose.yml up -d
 
 # 팰월드 서버 재시작 설정 스크립트 다운로드 및 실행
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/timer.sh
