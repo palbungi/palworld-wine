@@ -73,8 +73,7 @@ docker-compose -f /home/$(whoami)/palworld-wine/portainer/docker-compose.yml up 
 # 팰월드 백업 스크립트 다운로드 및 크론탭에 30분에 한번 백업 등록
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/backup.sh
 chmod +x backup.sh
-USER_NAME=$(whoami)/palworld-wine
-sed -i "s/\\\$(whoami)/palworld-wine/${USER_NAME}/g" "backup.sh"
+sed -i "s/YOUR_USERNAME/$(whoami)/g" backup.sh
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/cron.sh
 bash cron.sh
 rm cron.sh
