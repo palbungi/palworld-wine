@@ -10,7 +10,7 @@ RM_BIN="/usr/bin/rm"
 
 # 기본 경로 (YOUR_USERNAME을 실제 팔월드 서버를 실행하는 사용자 이름으로 변경)
 # 예를 들어, 사용자 이름이 'gcpuser'라면 아래와 같이 명시
-BASE_DIR="/home/gcpuser/palworld-wine/game/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF"
+BASE_DIR="/home/YOUR_USERNAME/palworld-wine/game/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF"
 BACKUP_ROOT="$BASE_DIR/backup"
 
 # 백업이 시작될 때 로그 메시지
