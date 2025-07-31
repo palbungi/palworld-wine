@@ -7,7 +7,7 @@ cd palworld-wine
 
 # 리눅스 업데이트 & 업그레이드
 sudo apt update 
-sudo DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade -y
+sudo DEBIAN_FRONTEND=noninteractive APT_LISTCHANGES_FRONTEND=none apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -o APT::Get::AssumeYes="true" upgrade
 
 # 도커&도커컴포즈 설치
 sudo groupadd docker
