@@ -24,4 +24,4 @@ ${DOCKER_COMPOSE_BIN} -f "${YAML_FILE}" up -d || { ${ECHO_BIN} "ERROR: Failed to
 
 # 서버 재시작 알림
 ${ECHO_BIN} -e "\e[32m서버가 재시작 되었습니다.\e[0m"
-${ECHO_BIN} -e "\e[33m최소 3분 후 게임에 접속해주세요.\e[0m"
+${ECHO_BIN} -e "\e[33m최소 5분 후 게임에 접속해주세요.\e[0m"
