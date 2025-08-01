@@ -29,14 +29,20 @@ wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/do
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/default.env
 sed -i "s/^PUBLIC_IP=.*/PUBLIC_IP=$(curl -s ifconfig.me)/" default.env
 
-# 서버 재시작 스크립트 다운로드, 경로설정, 실행 권한 추가
+# 서버 시작/재시작/중지 스크립트 다운로드, 경로설정, 실행 권한 추가
+USERNAME=$(whoami)
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/regular_maintenance.sh
 chmod +x /home/$(whoami)/palworld-wine/regular_maintenance.sh
-USERNAME=$(whoami)
 sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/palworld-wine/regular_maintenance.sh
+wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/start.sh
+chmod +x /home/$(whoami)/start.sh
+sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/start.sh
 wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/restart.sh
 chmod +x /home/$(whoami)/restart.sh
 sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/restart.sh
+wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/stop.sh
+chmod +x /home/$(whoami)/stop.sh
+sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/stop.sh
 
 # 서버 디렉토리 생성 및 설정파일 다운로드(Engine.ini 최적화, GameUserSettings.ini 서버저장 디렉토리 지정)
 mkdir -p /home/$(whoami)/palworld-wine/game/Pal/Saved/Config/WindowsServer
