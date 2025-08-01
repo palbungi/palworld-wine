@@ -92,7 +92,7 @@ nano default.env
 # 팰월드 서버 재시작 설정 스크립트 다운로드 및 실행
 wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/timer.sh
 chmod +x /home/$(whoami)/timer.sh
-sed -i "s/YOUR_USERNAME/$USERNAME/g" /home//$(whoami)/timer.sh
+sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/timer.sh
 echo "화면을 지웁니다..."
 sleep 1
 clear
