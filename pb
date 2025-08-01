@@ -103,10 +103,10 @@ sudo systemctl enable cron
 # 팰월드 서버 시작
 docker-compose -f /home/$(whoami)/palworld-wine/docker-compose.yml up -d
 
-# Portainer 설치 및 실행(웹에서 서버관리)
-mkdir /home/$(whoami)/palworld-wine/portainer
-wget -P /home/$(whoami)/palworld-wine/portainer https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/portainer/docker-compose.yml
-docker-compose -f /home/$(whoami)/palworld-wine/portainer/docker-compose.yml up -d
+# Portainer 설치 및 실행(웹에서 서버관리) - 삭제 유무 결정중
+# mkdir /home/$(whoami)/palworld-wine/portainer
+# wget -P /home/$(whoami)/palworld-wine/portainer https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/portainer/docker-compose.yml
+# docker-compose -f /home/$(whoami)/palworld-wine/portainer/docker-compose.yml up -d
 
 # 초보들을 위한 Portainer 접속 IP 안내
 clear
