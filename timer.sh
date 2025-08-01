@@ -99,7 +99,7 @@ while true; do
         break
 
     else
-        echo "1 또는 2를 입력해주세요."
+        echo "숫자 0 1 2 하나를 입력해주세요."
     fi
 done
 
