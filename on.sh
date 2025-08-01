@@ -14,7 +14,6 @@ CONTAINER_NAME="palworld-wine-server"
 ${ECHO_BIN} -e "\e[32m5초 후 서버가 재시작 됩니다\e[0m"
 
 # 서버 저장시간 5초대기
-${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Save" || { ${ECHO_BIN} "Save" ; exit 1; }
 ${SLEEP_BIN} 5
 
 # 도커 재시작
