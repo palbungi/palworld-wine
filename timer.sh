@@ -47,12 +47,7 @@ while true; do
             HOUR=$((TOTAL_MINUTES / 60))
             MIN=$((TOTAL_MINUTES % 60))
             
-            if [[ "$HOUR" -gt 0 ]]; then
-                printf "실행 시간: %02d시 %02d분\n" "$HOUR" "$MIN"
-            else
-                printf "실행 시간: %02d분\n" "$MIN"
-            fi
-            
+            printf "실행 시간: %02d시 %02d분\n" "$HOUR" "$MIN"
             echo "$MIN $HOUR * * * $SCRIPT_PATH" >> "$CRON_FILE"
         done
         break
@@ -90,12 +85,14 @@ while true; do
             done
         done
 
-        # 크론 파일 생성
+        # 크론 파일 생성 및 출력
+        echo "아래와 같은 시간에 스크립트가 실행되도록 설정됩니다."
         > "$CRON_FILE"
         for TIME in "${TIMES[@]}"; do
             HOUR=$(echo "$TIME" | cut -d':' -f1)
             MIN=$(echo "$TIME" | cut -d':' -f2)
-            echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            printf "실행 시간: %02d시 %02d분\n" "$HOUR" "$MIN"
+            echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> "$CRON_FILE"
             echo "$MIN $HOUR * * * $SCRIPT_PATH" >> "$CRON_FILE"
         done
         break
@@ -111,6 +108,3 @@ rm "$CRON_FILE"
 sudo systemctl restart cron
 
 echo "팰월드 재시작 스크립트가 성공적으로 등록되었습니다."
-sudo systemctl start cron
-sudo systemctl enable cron
-sudo systemctl restart cron
