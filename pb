@@ -19,7 +19,6 @@ sudo apt-get -y -o Dpkg::Options::="--force-confdef" \
 # 도커&도커컴포즈 설치
 sudo groupadd docker
 sudo usermod -aG docker $(whoami)
-# 구버전 sudo apt install -y nano && sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && yes | sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io
 sudo apt update && sudo apt install -y nano curl apt-transport-https ca-certificates gnupg software-properties-common && sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io
 sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
@@ -115,7 +114,6 @@ clear
 # echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
 echo "게임서버 접속 아이피: $(curl -s ifconfig.me):8211"
 echo "위 주소들을 메모 해주세요. 게임서버는 최소 5분 후 접속해주세요."
-echo "이제 이 창은 닫아도 됩니다."
 
 # 설치파일 삭제
 rm /home/$(whoami)/pb
