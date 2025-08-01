@@ -9,20 +9,21 @@ if [ ! -f "$SCRIPT_PATH" ]; then
     chmod +x "$SCRIPT_PATH"
 fi
 
-# 기존 크론 삭제
-crontab -r
-echo "기존 팰월드서버 재시작 목록을 삭제했습니다."
-
 # 모드 선택
 while true; do
     echo "팰월드서버 재시작 스케쥴 등록 방법을 선택하세요:"
-    echo "0. 팰월드서버 재시작 안함"
-    echo "1. 하루 횟수만 지정 (자동 시간 계산)"
-    echo "2. 하루 횟수와 시간 지정"
+    echo 
+    echo "0. 팰월드서버 재시작 스케쥴 삭제 (재시작을 하지 않습니다)"
+    echo 
+    echo "1. 팰월드서버 재시작 횟수만 입력 (24시간에서 횟수를 자동으로 나눠서 등록)"
+    echo 
+    echo "2. 팰월드서버 재시작 횟수와 시간 지정 (횟수만큼 시간 입력)"
+    echo 
     read -p "번호 선택: " MODE
 
     if [[ "$MODE" == "0" ]]; then
-        echo "스크립트를 종료합니다."
+        crontab -r
+        echo "팰월드서버 재시작 스케쥴을 삭제했습니다."
         exit 0
     elif [[ "$MODE" == "1" ]]; then
         # 횟수 입력
