@@ -11,7 +11,7 @@ YAML_FILE="/home/YOUR_USERNAME/palworld-wine/docker-compose.yml" # docker-compos
 CONTAINER_NAME="palworld-wine-server"
 
 # 시작 메시지
-echo "5초 후 서버가 재시작 됩니다"
+${ECHO_BIN} -e "\e[32m5초 후 서버가 재시작 됩니다\e[0m"
 
 # 서버 저장시간 5초대기
 ${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Save" || { ${ECHO_BIN} "Save" ; exit 1; }
@@ -23,4 +23,5 @@ ${DOCKER_COMPOSE_BIN} -f "${YAML_FILE}" down || { ${ECHO_BIN} "ERROR: Failed to 
 ${DOCKER_COMPOSE_BIN} -f "${YAML_FILE}" up -d || { ${ECHO_BIN} "ERROR: Failed to start docker containers." ; exit 1; }
 
 # 서버 재시작 알림
-${ECHO_BIN} "서버가 재시작 되었습니다. 최소 3분 후 게임에 접속해주세요. "
+${ECHO_BIN} -e "\e[32m서버가 재시작 되었습니다.\e[0m"
+${ECHO_BIN} -e "\e[33m최소 3분 후 게임에 접속해주세요.\e[0m"
