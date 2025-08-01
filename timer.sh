@@ -11,7 +11,7 @@ fi
 
 # 기존 크론 삭제
 crontab -r
-echo "기존 재시작 목록을 삭제했습니다."
+echo "기존 팰월드서버 재시작 목록을 삭제했습니다."
 
 # 모드 선택
 while true; do
@@ -40,14 +40,14 @@ while true; do
 
         # 자동 시간 계산 및 출력
         INTERVAL=$((24 * 60 / COUNT))
-        echo "아래와 같은 시간에 스크립트가 실행되도록 설정됩니다."
+        echo "아래와 같은 시간에 서버가 재시작 되도록 설정됩니다."
         > "$CRON_FILE"
         for ((i=0; i<COUNT; i++)); do
             TOTAL_MINUTES=$((i * INTERVAL))
             HOUR=$((TOTAL_MINUTES / 60))
             MIN=$((TOTAL_MINUTES % 60))
             
-            printf "실행 시간: %02d시 %02d분\n" "$HOUR" "$MIN"
+            printf "팰월드 서버 재시작 시간: %02d시 %02d분\n" "$HOUR" "$MIN"
             echo "$MIN $HOUR * * * $SCRIPT_PATH" >> "$CRON_FILE"
         done
         break
@@ -86,12 +86,12 @@ while true; do
         done
 
         # 크론 파일 생성 및 출력
-        echo "아래와 같은 시간에 스크립트가 실행되도록 설정됩니다."
+        echo "아래와 같은 시간에 서버가 재시작 되도록 설정됩니다."
         > "$CRON_FILE"
         for TIME in "${TIMES[@]}"; do
             HOUR=$(echo "$TIME" | cut -d':' -f1)
             MIN=$(echo "$TIME" | cut -d':' -f2)
-            printf "실행 시간: %02d시 %02d분\n" "$HOUR" "$MIN"
+            printf "팰월드 서버 재시작 시간: %02d시 %02d분\n" "$HOUR" "$MIN"
             echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> "$CRON_FILE"
             echo "$MIN $HOUR * * * $SCRIPT_PATH" >> "$CRON_FILE"
         done
