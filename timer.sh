@@ -5,7 +5,7 @@ SCRIPT_PATH="/home/YOUR_USERNAME/palworld-wine/regular_maintenance.sh"
 # regular_maintenance.sh 유무 확인
 if [ ! -f "$SCRIPT_PATH" ]; then
     echo "regular_maintenance.sh이 없어서 다운로드중..."
-    curl -o "$SCRIPT_PATH" https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/regular_maintenance.sh
+    curl -o "$SCRIPT_PATH" https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/regular_maintenance.sh
     chmod +x "$SCRIPT_PATH"
 fi
 
