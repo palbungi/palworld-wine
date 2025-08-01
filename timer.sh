@@ -24,40 +24,38 @@ while true; do
     if [[ "$MODE" == "0" ]]; then
         echo "스크립트를 종료합니다."
         exit 0
+    elif [[ "$MODE" == "1" ]]; then
+        # 횟수 입력
+        while true; do
+            read -p "하루에 몇 번 실행할까요? (숫자 입력, 0 입력 시 종료): " COUNT
+            if [[ "$COUNT" == "0" ]]; then
+                echo "스크립트를 종료합니다."
+                exit 0
+            elif [[ "$COUNT" =~ ^[1-9][0-9]*$ ]]; then
+                break
+            else
+                echo "올바른 숫자를 입력해주세요."
+            fi
+        done
 
-elif [[ "$MODE" == "1" ]]; then
-    # 횟수 입력
-    while true; do
-        read -p "하루에 몇 번 실행할까요? (숫자 입력, 0 입력 시 종료): " COUNT
-        if [[ "$COUNT" == "0" ]]; then
-            echo "스크립트를 종료합니다."
-            exit 0
-        elif [[ "$COUNT" =~ ^[1-9][0-9]*$ ]]; then
-            break
-        else
-            echo "올바른 숫자를 입력해주세요."
-        fi
-    done
-
-    # 자동 시간 계산 및 출력
-    INTERVAL=$((24 * 60 / COUNT))
-    echo "아래와 같은 시간에 스크립트가 실행되도록 설정됩니다."
-    > "$CRON_FILE"
-    for ((i=0; i<COUNT; i++)); do
-        TOTAL_MINUTES=$((i * INTERVAL))
-        HOUR=$((TOTAL_MINUTES / 60))
-        MIN=$((TOTAL_MINUTES % 60))
-        
-        if [[ "$HOUR" -gt 0 ]]; then
-            printf "실행 시간: %02d시 %02d분\n" "$HOUR" "$MIN"
-        else
-            printf "실행 시간: %02d분\n" "$MIN"
-        fi
-        
-        echo "$MIN $HOUR * * * $SCRIPT_PATH" >> "$CRON_FILE"
-    done
-    break
-fi
+        # 자동 시간 계산 및 출력
+        INTERVAL=$((24 * 60 / COUNT))
+        echo "아래와 같은 시간에 스크립트가 실행되도록 설정됩니다."
+        > "$CRON_FILE"
+        for ((i=0; i<COUNT; i++)); do
+            TOTAL_MINUTES=$((i * INTERVAL))
+            HOUR=$((TOTAL_MINUTES / 60))
+            MIN=$((TOTAL_MINUTES % 60))
+            
+            if [[ "$HOUR" -gt 0 ]]; then
+                printf "실행 시간: %02d시 %02d분\n" "$HOUR" "$MIN"
+            else
+                printf "실행 시간: %02d분\n" "$MIN"
+            fi
+            
+            echo "$MIN $HOUR * * * $SCRIPT_PATH" >> "$CRON_FILE"
+        done
+        break
 
     elif [[ "$MODE" == "2" ]]; then
         # 횟수 입력
