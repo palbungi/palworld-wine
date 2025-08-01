@@ -11,7 +11,7 @@ YAML_FILE="/home/YOUR_USERNAME/palworld-wine/docker-compose.yml" # docker-compos
 CONTAINER_NAME="palworld-wine-server"
 
 # 시작 메시지
-${ECHO_BIN} -e "\e[32m5초 후 서버가 재시작 됩니다\e[0m"
+${ECHO_BIN} -e "\e[32m5초 후 서버가 종료 됩니다\e[0m"
 
 # 서버 저장시간 5초대기
 ${DOCKER_BIN} exec -i ${CONTAINER_NAME} rconcli "Save" || { ${ECHO_BIN} "Save" ; exit 1; }
