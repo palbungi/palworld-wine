@@ -15,7 +15,7 @@ echo "기존 팰월드서버 재시작 목록을 삭제했습니다."
 
 # 모드 선택
 while true; do
-    echo "팰월드서버 재시작 모드를 선택하세요:"
+    echo "팰월드서버 재시작 스케쥴 등록 방법을 선택하세요:"
     echo "0. 팰월드서버 재시작 안함"
     echo "1. 하루 횟수만 지정 (자동 시간 계산)"
     echo "2. 하루 횟수와 시간 지정"
@@ -40,7 +40,7 @@ while true; do
 
         # 자동 시간 계산 및 출력
         INTERVAL=$((24 * 60 / COUNT))
-        echo -e "\e[32m아래와 같은 시간에 서버가 재시작 되도록 설정됩니다.\e[0m"
+        echo -e "\e[1;32m아래와 같은 시간에 서버가 재시작 되도록 설정됩니다.\e[0m"
         > "$CRON_FILE"
         for ((i=0; i<COUNT; i++)); do
             TOTAL_MINUTES=$((i * INTERVAL))
@@ -86,7 +86,7 @@ while true; do
         done
 
         # 크론 파일 생성 및 출력
-        echo -e "\e[32m아래와 같은 시간에 서버가 재시작 되도록 설정됩니다.\e[0m"
+        echo -e "\e[1;32m아래와 같은 시간에 서버가 재시작 되도록 설정됩니다.\e[0m"
         > "$CRON_FILE"
         for TIME in "${TIMES[@]}"; do
             HOUR=$(echo "$TIME" | cut -d':' -f1)
@@ -107,4 +107,4 @@ crontab "$CRON_FILE"
 rm "$CRON_FILE"
 sudo systemctl restart cron
 
-echo -e "\e[1;32m팰월드 재시작 스크립트가 성공적으로 등록되었습니다.\e[0m"
+echo -e "\e[1;32m팰월드서버 재시작 스케쥴이 등록되었습니다.\e[0m"
