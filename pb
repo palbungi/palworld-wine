@@ -27,7 +27,8 @@ sudo chmod 666 /var/run/docker.sock
 # 팰월드 도커 다운로드
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/docker-compose.yml
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/default.env
-sed -i "s/^REGION=.*/REGION=$(curl -s ifconfig.me)/" default.env
+sed -i "s/^REGION=.*/REGION=Asia" default.env
+sed -i "s/^PUBLIC_IP=.*/PUBLIC_IP=$(curl -s ifconfig.me)/" default.env
 
 # 서버 재시작 스크립트 다운로드, 경로설정, 실행 권한 추가
 wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/regular_maintenance.sh
