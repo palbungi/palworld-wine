@@ -110,9 +110,9 @@ docker-compose -f /home/$(whoami)/palworld-wine/docker-compose.yml up -d
 
 # 초보들을 위한 Portainer 접속 IP 안내
 clear
-echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
-echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
-echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
+# echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
+# echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
+# echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
 echo "게임서버 접속 아이피: $(curl -s ifconfig.me):8211"
 echo "위 주소들을 메모 해주세요. 게임서버는 최소 5분 후 접속해주세요."
 echo "이제 이 창은 닫아도 됩니다."
