@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# 파란색 ANSI 코드
+# 색상 ANSI 코드
 BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
 NC='\033[0m' # 색상 초기화
 
 # Config.json 위치
@@ -14,8 +15,9 @@ if ! command -v jq &> /dev/null; then
 fi
 
 # 사용자로부터 IP 입력받기
-echo -e "${BLUE}운영자 IP 주소를 입력받습니다...${NC}"
-read -p "추가할 운영자 IP 주소를 입력하세요: " NEW_IP
+echo -ne "${YELLOW}추가할 운영자 IP 주소를 입력하세요: ${NC}"
+read NEW_IP
+
 
 # jq를 사용해 조건에 따라 삽입
 jq --arg new_ip "$NEW_IP" '
