@@ -1,5 +1,6 @@
 # UBUNTU 22.04 LTS Minimal에서 구성시 필요한 패키지 설치 관련
 # curl wget unzip software-properties-common cron sudo gosu libgl1 libvulkan1 tzdata debconf-utils nano gnupg  apt-transport-https ca-certificates cron systemd net-tools lsb-release iproute2 sed
+# 구글클라우드 UBUNTU 22.04 LTS Minimal에 이미 설치된 패키지 리스트: curl, wget, debconf-set-selections lsb_release sed
 # 크론서비스 등록필요 service cron start
 
 # 한국시간 설정
