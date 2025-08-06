@@ -71,6 +71,10 @@ mkdir -p /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender
 wget -P /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/Config.json
 sed -i "s|127.0.0.1|$(who | awk '{print $5}' | tr -d '()')|g" /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender/Config.json
 
+# 팰디펜더 운영자 IP 등록 스크립트 추가
+wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/admin.sh
+chmod +x /home/$(whoami)/admin.sh
+
 # 팰셰마 최신버전 다운로드 및 압축해제
 wget https://github.com/Okaetsu/PalSchema/releases/download/0.4.2/PalSchema_0.4.2.zip
 unzip PalSchema_0.4.2.zip -d "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods/"
@@ -104,6 +108,7 @@ clear
 bash /home/$(whoami)/timer.sh
 sudo systemctl start cron
 sudo systemctl enable cron
+
 
 # 팰월드 서버 시작
 docker-compose -f /home/$(whoami)/palworld-wine/docker-compose.yml up -d
