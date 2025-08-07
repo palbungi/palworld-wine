@@ -5,8 +5,8 @@ sudo timedatectl set-timezone Asia/Seoul
 mkdir palworld-wine
 cd palworld-wine
 
-# 리눅스 업데이트 & 업그레이드
-sudo apt-get -y install debconf-utils unzip cron gosu libgl1 libvulkan1 tzdata nano man-db systemd net-tools iproute2 dialog apt-transport-https ca-certificates gnupg software-properties-common
+# 리눅스 업데이트 & 업그레이드 - 2025년 8월 7일 UBUNTU 22.04 Minimal에서 설치 가능하도록 설치 패키지 추가
+sudo apt-get -y install debconf-utils unzip cron gosu libgl1 libvulkan1 tzdata nano man-db systemd net-tools iproute2 dialog apt-transport-https ca-certificates gnupg software-properties-common util-linux
 echo "tzdata tzdata/Areas select Asia" | sudo debconf-set-selections
 echo "tzdata tzdata/Zones/Asia select Beirut" | sudo debconf-set-selections
 sudo apt-get -y install debconf-utils
