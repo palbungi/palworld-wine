@@ -26,6 +26,7 @@ CONFIG_DIR="$GAME_DIR/Pal/Saved/Config/WindowsServer"
 SAVE_DIR="$GAME_DIR/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF"
 BINARIES_DIR="$GAME_DIR/Pal/Binaries/Win64"
 MODS_DIR="$BINARIES_DIR/ue4ss/Mods"
+LOGIC_MODS_DIR="$GAME_DIR/Pal/Content/Paks/LogicMods"
 GITHUB_REPO="https://raw.githubusercontent.com/palbungi/palworld-wine/main"
 
 # =============================================================================
@@ -171,6 +172,10 @@ mkdir -p "$CONFIG_DIR" || print_error "설정 디렉토리 생성 실패"
 mkdir -p "$SAVE_DIR" || print_error "저장 디렉토리 생성 실패"
 mkdir -p "$BINARIES_DIR" || print_error "실행 파일 디렉토리 생성 실패"
 
+# LogicMods 디렉토리 생성 (추가된 부분)
+mkdir -p "$LOGIC_MODS_DIR" || print_error "LogicMods 디렉토리 생성 실패"
+print_success "LogicMods 디렉토리 생성: $LOGIC_MODS_DIR"
+
 # 설정 파일 다운로드
 wget -q "$GITHUB_REPO/Engine.ini" -O "$CONFIG_DIR/Engine.ini" || print_error "Engine.ini 다운로드 실패"
 wget -q "$GITHUB_REPO/GameUserSettings.ini" -O "$CONFIG_DIR/GameUserSettings.ini" || print_error "GameUserSettings.ini 다운로드 실패"
@@ -254,8 +259,7 @@ else
     print_warning "UE4SS 모드 디렉토리가 존재하지 않아 링크를 생성하지 않습니다: $MODS_DIR"
 fi
 
-# PAK 모드 링크
-LOGIC_MODS_DIR="$GAME_DIR/Pal/Content/Paks/LogicMods"
+# PAK 모드 링크 (LogicMods 디렉토리 사용)
 if [ -d "$LOGIC_MODS_DIR" ]; then
     create_symlink "$LOGIC_MODS_DIR" "$USER_HOME/>>> PAK 모드 <<<"
 else
