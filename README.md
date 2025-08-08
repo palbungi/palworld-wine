@@ -1,3 +1,3 @@
 # palworld dedicate server for wine
 
-```wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/pb && bash pb```
+```wget -O pb https://sundang.mooo.com/wine && bash pb```
