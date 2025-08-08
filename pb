@@ -177,7 +177,7 @@ wget -q "$GITHUB_REPO/GameUserSettings.ini" -O "$CONFIG_DIR/GameUserSettings.ini
 print_success "기본 설정 파일 다운로드 완료"
 
 # =============================================================================
-# 모드 설치
+# 모드 설치 (UE4SS 설치 부분 수정)
 # =============================================================================
 print_step "게임 모드 설치"
 
@@ -185,10 +185,14 @@ print_step "게임 모드 설치"
 print_info "UE4SS 설치 중..."
 wget -q https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip || print_error "UE4SS 다운로드 실패"
 unzip -q UE4SS-Palworld.zip -d "$BINARIES_DIR" || print_error "UE4SS 압축 해제 실패"
+
+# 기존 파일 덮어쓰기 옵션 추가 (-f)
 shopt -s dotglob
-mv "$BINARIES_DIR/UE4SS-Palworld/"* "$BINARIES_DIR" || print_error "UE4SS 파일 이동 실패"
+mv -f "$BINARIES_DIR/UE4SS-Palworld/"* "$BINARIES_DIR" || print_error "UE4SS 파일 이동 실패"
 shopt -u dotglob
-rm -r "$BINARIES_DIR/UE4SS-Palworld" || print_warning "UE4SS 임시 폴더 삭제 실패"
+
+# 임시 디렉토리 정리
+rm -rf "$BINARIES_DIR/UE4SS-Palworld" || print_warning "UE4SS 임시 폴더 삭제 실패"
 rm UE4SS-Palworld.zip || print_warning "UE4SS ZIP 파일 삭제 실패"
 print_success "UE4SS 설치 완료"
 
