@@ -223,29 +223,63 @@ print_success "팰셰마 설치 완료"
 # =============================================================================
 print_step "모드 관리 심볼릭 링크 생성"
 
+# 디렉토리 존재 여부 확인 후 링크 생성
 create_symlink() {
     local target="$1"
     local link_name="$2"
     
+    # 대상 디렉토리가 존재하는지 확인
+    if [ ! -d "$target" ]; then
+        print_warning "대상 디렉토리가 존재하지 않아 링크를 생성하지 않습니다: $target"
+        return 1
+    fi
+    
+    # 기존 링크가 존재하면 제거
     if [ -L "$link_name" ]; then
         rm "$link_name" || print_warning "기존 링크 삭제 실패: $link_name"
     fi
     
-    ln -s "$target" "$link_name" || print_error "링크 생성 실패: $target → $link_name"
-    chmod +x "$link_name" || print_warning "링크 실행 권한 설정 실패: $link_name"
+    # 심볼릭 링크 생성
+    ln -s "$target" "$link_name" || print_warning "링크 생성 실패: $target → $link_name"
 }
 
-# 모드 관리 링크
-create_symlink "$MODS_DIR" "$USER_HOME/>>> UE4SS 모드 <<<"
-create_symlink "$GAME_DIR/Pal/Content/Paks/LogicMods" "$USER_HOME/>>> PAK 모드 <<<"
-create_symlink "$BINARIES_DIR/PalDefender" "$USER_HOME/>>> 팰디펜더 <<<"
+# UE4SS 모드 링크
+if [ -d "$MODS_DIR" ]; then
+    create_symlink "$MODS_DIR" "$USER_HOME/>>> UE4SS 모드 <<<"
+else
+    print_warning "UE4SS 모드 디렉토리가 존재하지 않아 링크를 생성하지 않습니다: $MODS_DIR"
+fi
 
-# 돌아가기 링크
-create_symlink "$USER_HOME" "$MODS_DIR/>>> 처음으로 돌아가기 <<<"
-create_symlink "$USER_HOME" "$GAME_DIR/Pal/Content/Paks/LogicMods/>>> 처음으로 돌아가기 <<<"
-create_symlink "$USER_HOME" "$BINARIES_DIR/PalDefender/>>> 처음으로 돌아가기 <<<"
+# PAK 모드 링크
+LOGIC_MODS_DIR="$GAME_DIR/Pal/Content/Paks/LogicMods"
+if [ -d "$LOGIC_MODS_DIR" ]; then
+    create_symlink "$LOGIC_MODS_DIR" "$USER_HOME/>>> PAK 모드 <<<"
+else
+    print_warning "PAK 모드 디렉토리가 존재하지 않아 링크를 생성하지 않습니다: $LOGIC_MODS_DIR"
+fi
 
-print_success "모드 관리 링크 생성 완료"
+# 팰디펜더 링크
+PALDEFENDER_DIR="$BINARIES_DIR/PalDefender"
+if [ -d "$PALDEFENDER_DIR" ]; then
+    create_symlink "$PALDEFENDER_DIR" "$USER_HOME/>>> 팰디펜더 <<<"
+else
+    print_warning "팰디펜더 디렉토리가 존재하지 않아 링크를 생성하지 않습니다: $PALDEFENDER_DIR"
+fi
+
+# 돌아가기 링크 (대상 디렉토리가 없으면 생성하지 않음)
+if [ -d "$MODS_DIR" ]; then
+    ln -s "$USER_HOME" "$MODS_DIR/>>> 처음으로 돌아가기 <<<" 2>/dev/null || print_warning "돌아가기 링크 생성 실패: UE4SS 모드"
+fi
+
+if [ -d "$LOGIC_MODS_DIR" ]; then
+    ln -s "$USER_HOME" "$LOGIC_MODS_DIR/>>> 처음으로 돌아가기 <<<" 2>/dev/null || print_warning "돌아가기 링크 생성 실패: PAK 모드"
+fi
+
+if [ -d "$PALDEFENDER_DIR" ]; then
+    ln -s "$USER_HOME" "$PALDEFENDER_DIR/>>> 처음으로 돌아가기 <<<" 2>/dev/null || print_warning "돌아가기 링크 생성 실패: 팰디펜더"
+fi
+
+print_success "모드 관리 링크 생성 완료 (일부 실패 항목 있을 수 있음)"
 
 # =============================================================================
 # 서버 설정 수정
@@ -327,9 +361,9 @@ echo -e "  ${CYAN}운영자 추가: ${BLUE}./admin.sh [IP]${NC}"
 
 # 모드 관리 정보 출력
 echo -e "\n${GREEN}${BOLD}■ 모드 관리${NC}"
-echo -e "  ${CYAN}UE4SS 모드: ${BLUE}$USER_HOME/>>> UE4SS 모드 <<<${NC}"
-echo -e "  ${CYAN}PAK 모드: ${BLUE}$USER_HOME/>>> PAK 모드 <<<${NC}"
-echo -e "  ${CYAN}팰디펜더 설정: ${BLUE}$USER_HOME/>>> 팰디펜더 <<<${NC}"
+echo -e "  ${CYAN}UE4SS 모드: ${BLUE}$USER_HOME/>>> UE4SS 모드 <<<${NC}" | grep -v 'cannot access'
+echo -e "  ${CYAN}PAK 모드: ${BLUE}$USER_HOME/>>> PAK 모드 <<<${NC}" | grep -v 'cannot access'
+echo -e "  ${CYAN}팰디펜더 설정: ${BLUE}$USER_HOME/>>> 팰디펜더 <<<${NC}" | grep -v 'cannot access'
 
 # 중요 정보 출력
 echo -e "\n${ORANGE}${BOLD}■ 중요 정보${NC}"
