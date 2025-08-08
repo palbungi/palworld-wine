@@ -13,6 +13,10 @@ MAGENTA='\033[1;35m'
 CYAN='\033[1;36m'
 NC='\033[0m' # 색상 초기화
 
+# 입력 프롬프트 스타일
+PROMPT_COLOR="${CYAN}${BOLD}"
+INPUT_COLOR="${CYAN}"
+
 # =============================================================================
 # 경로 설정 (사용자 환경에 맞게 수정 필요)
 # =============================================================================
@@ -42,6 +46,39 @@ print_success() {
     echo -e "\n${GREEN}${BOLD}$1${NC}${NORMAL}"
 }
 
+# 색상이 적용된 입력 함수
+colored_read() {
+    local prompt="$1"
+    local var_name="$2"
+    echo -ne "${PROMPT_COLOR}${prompt}${INPUT_COLOR}"
+    read "$var_name"
+    echo -ne "${NC}"
+}
+
+# 24시간제를 12시간제로 변환 (오전/오후 표시)
+convert_to_12h() {
+    local hour="$1"
+    local minute="$2"
+    local period suffix
+    
+    if [[ $hour -eq 0 || $hour -eq 24 ]]; then
+        period="오전"
+        hour=12
+    elif [[ $hour -lt 12 ]]; then
+        period="오전"
+    elif [[ $hour -eq 12 ]]; then
+        period="오후"
+    else
+        period="오후"
+        hour=$((hour - 12))
+    fi
+    
+    printf -v hour_str "%02d" "$hour"
+    printf -v min_str "%02d" "$minute"
+    
+    echo "[$period] $hour_str:$min_str"
+}
+
 # =============================================================================
 # 메인 스크립트 시작
 # =============================================================================
@@ -69,7 +106,7 @@ while true; do
     echo -e "  ${YELLOW}2. 시간 직접 입력 (사용자 지정 스케줄)${NC}"
     echo ""
     
-    read -p $'\033[1;36m▶ 선택 (0-2): \033[0m' MODE
+    colored_read "▶ 선택 (0-2): " MODE
 
     # 모드 0: 스케줄 삭제
     if [[ "$MODE" == "0" ]]; then
@@ -81,7 +118,7 @@ while true; do
     elif [[ "$MODE" == "1" ]]; then
         echo -e "\n${GREEN}${BOLD}■ 하루 재시작 횟수 설정${NC}"
         while true; do
-            read -p $'\033[1;33m▶ 하루에 몇 번 재시작할까요? (0 입력 시 종료): \033[0m' COUNT
+            colored_read "▶ 하루에 몇 번 재시작할까요? (0 입력 시 종료): " COUNT
             
             if [[ "$COUNT" == "0" ]]; then
                 echo -e "${BLUE}${BOLD}스크립트를 종료합니다.${NC}"
@@ -108,8 +145,17 @@ while true; do
             printf -v HOUR_STR "%02d" "$HOUR"
             printf -v MIN_STR "%02d" "$MIN"
             
-            # 시간 출력
-            echo -e "  ${YELLOW}${BOLD}• $((i+1))번: ${HOUR_STR}:${MIN_STR}${NC}"
+            # 12시간제로 변환 (오전/오후 표시)
+            TIME_12H=$(convert_to_12h "$HOUR" "$MIN")
+            
+            # 시간 출력 (오전/오후 구분)
+            if [ $HOUR -lt 12 ]; then
+                # 오전 시간 (00:00 ~ 11:59)
+                echo -e "  ${YELLOW}${BOLD}• $((i+1))번: $TIME_12H${NC}"
+            else
+                # 오후 시간 (12:00 ~ 23:59)
+                echo -e "  ${GREEN}${BOLD}• $((i+1))번: $TIME_12H${NC}"
+            fi
             
             # 크론 항목 추가
             echo "$MIN_STR $HOUR_STR * * * $SCRIPT_PATH" >> "$CRON_FILE"
@@ -120,7 +166,7 @@ while true; do
     elif [[ "$MODE" == "2" ]]; then
         echo -e "\n${YELLOW}${BOLD}■ 하루 재시작 횟수 설정${NC}"
         while true; do
-            read -p $'\033[1;33m▶ 하루에 몇 번 재시작할까요? (0 입력 시 종료): \033[0m' COUNT
+            colored_read "▶ 하루에 몇 번 재시작할까요? (0 입력 시 종료): " COUNT
             
             if [[ "$COUNT" == "0" ]]; then
                 echo -e "${BLUE}${BOLD}스크립트를 종료합니다.${NC}"
@@ -137,7 +183,7 @@ while true; do
         echo -e "\n${YELLOW}${BOLD}■ 재시작 시간 입력 (HH:MM 형식)${NC}"
         for ((i=1; i<=COUNT; i++)); do
             while true; do
-                read -p $'\033[1;36m▶ '$i'번째 시간 입력 (예: 03:00): \033[0m' TIME
+                colored_read "▶ $i번째 시간 입력 (예: 03:00): " TIME
                 
                 # 24:00 변환 처리
                 if [[ "$TIME" == "24:00" ]]; then
@@ -166,8 +212,17 @@ while true; do
             printf -v HOUR_STR "%02d" "$HOUR"
             printf -v MIN_STR "%02d" "$MIN"
             
-            # 시간 출력
-            echo -e "  ${YELLOW}${BOLD}• ${HOUR_STR}:${MIN_STR}${NC}"
+            # 12시간제로 변환 (오전/오후 표시)
+            TIME_12H=$(convert_to_12h "$HOUR" "$MIN")
+            
+            # 시간 출력 (오전/오후 구분)
+            if [ $HOUR -lt 12 ]; then
+                # 오전 시간 (00:00 ~ 11:59)
+                echo -e "  ${YELLOW}${BOLD}• $TIME_12H${NC}"
+            else
+                # 오후 시간 (12:00 ~ 23:59)
+                echo -e "  ${GREEN}${BOLD}• $TIME_12H${NC}"
+            fi
             
             # 크론 항목 추가
             echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> "$CRON_FILE"
@@ -197,5 +252,3 @@ sudo systemctl restart cron || {
 # 완료 메시지
 # =============================================================================
 print_success "팰월드 서버 재시작 스케줄이 성공적으로 등록되었습니다!"
-echo -e "${BLUE}${BOLD}※ 등록된 스케줄 확인: ${YELLOW}crontab -l${NC}"
-echo -e "${BLUE}${BOLD}※ 스케줄 수정: ${YELLOW}crontab -e${NC}\n"
