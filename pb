@@ -1,131 +1,359 @@
-# 한국시간 설정
-sudo timedatectl set-timezone Asia/Seoul
+#!/bin/bash
+set -euo pipefail
 
-# 서버 디렉토리 생성
-mkdir palworld-wine
-cd palworld-wine
+# =============================================================================
+# 색상 및 스타일 정의
+# =============================================================================
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+MAGENTA='\033[1;35m'
+CYAN='\033[1;36m'
+ORANGE='\033[38;5;208m'
+NC='\033[0m' # No Color
 
-# 리눅스 업데이트 & 업그레이드 - 2025년 8월 7일 UBUNTU 22.04 Minimal에서 설치 가능하도록 설치 패키지 추가
-sudo apt-get -y install debconf-utils unzip cron gosu libgl1 libvulkan1 tzdata nano man-db systemd net-tools iproute2 dialog apt-transport-https ca-certificates gnupg software-properties-common util-linux
-echo "tzdata tzdata/Areas select Asia" | sudo debconf-set-selections
-echo "tzdata tzdata/Zones/Asia select Beirut" | sudo debconf-set-selections
-sudo apt-get -y install debconf-utils
-sudo debconf-set-selections <<< 'debconf debconf/frontend select Noninteractive'
+# =============================================================================
+# 사용자 정보 및 경로 설정
+# =============================================================================
+USER_NAME=$(whoami)
+USER_HOME="/home/$USER_NAME"
+SERVER_DIR="$USER_HOME/palworld-wine"
+GAME_DIR="$SERVER_DIR/game"
+CONFIG_DIR="$GAME_DIR/Pal/Saved/Config/WindowsServer"
+SAVE_DIR="$GAME_DIR/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF"
+BINARIES_DIR="$GAME_DIR/Pal/Binaries/Win64"
+MODS_DIR="$BINARIES_DIR/ue4ss/Mods"
+GITHUB_REPO="https://raw.githubusercontent.com/palbungi/palworld-wine/main"
+
+# =============================================================================
+# 진행 상태 출력 함수
+# =============================================================================
+print_step() {
+    echo -e "\n${CYAN}${BOLD}>>> $1${NC}${NORMAL}"
+}
+
+print_info() {
+    echo -e "${YELLOW}ℹ $1${NC}"
+}
+
+print_success() {
+    echo -e "${GREEN}✓ $1${NC}"
+}
+
+print_warning() {
+    echo -e "${ORANGE}⚠ $1${NC}"
+}
+
+print_error() {
+    echo -e "\n${RED}${BOLD}[ERROR] $1${NC}${NORMAL}" >&2
+    exit 1
+}
+
+# =============================================================================
+# 시작 메시지
+# =============================================================================
+clear
+echo -e "${MAGENTA}${BOLD}"
+echo "================================================"
+echo "   팰월드 서버 자동 설치 스크립트 (Wine 버전)"
+echo "================================================"
+echo -e "${NC}"
+
+print_step "시스템 정보 확인"
+echo -e "• 사용자: ${BLUE}$USER_NAME${NC}"
+echo -e "• 홈 디렉토리: ${BLUE}$USER_HOME${NC}"
+echo -e "• 서버 디렉토리: ${BLUE}$SERVER_DIR${NC}"
+echo -e "• OS: ${BLUE}$(lsb_release -ds)${NC}"
+echo -e "• 커널 버전: ${BLUE}$(uname -r)${NC}"
+
+# =============================================================================
+# 한국 시간 설정
+# =============================================================================
+print_step "한국 시간대 설정"
+sudo timedatectl set-timezone Asia/Seoul || print_error "시간대 설정 실패"
+print_success "현재 시간: $(date +'%Y-%m-%d %H:%M:%S %Z')"
+
+# =============================================================================
+# 필수 패키지 설치 및 시스템 업데이트
+# =============================================================================
+print_step "필수 패키지 설치 및 시스템 업데이트"
 export DEBIAN_FRONTEND=noninteractive
-sudo apt-get update
-sudo apt-get -y -o Dpkg::Options::="--force-confdef" \
-                -o Dpkg::Options::="--force-confold" \
-                upgrade -y
+echo "tzdata tzdata/Areas select Asia" | sudo debconf-set-selections
+echo "tzdata tzdata/Zones/Asia select Seoul" | sudo debconf-set-selections
 
-# 도커&도커컴포즈 설치
-sudo groupadd docker
-sudo usermod -aG docker $(whoami)
-sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io
-sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-sudo chmod 666 /var/run/docker.sock
+sudo apt-get update || print_error "패키지 목록 업데이트 실패"
+sudo apt-get install -y debconf-utils unzip cron gosu libgl1 libvulkan1 tzdata \
+    nano man-db systemd net-tools iproute2 dialog apt-transport-https \
+    ca-certificates gnupg software-properties-common util-linux || print_error "패키지 설치 실패"
 
-# 팰월드 도커 다운로드
-wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/docker-compose.yml
-wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/default.env
-sed -i "s/^PUBLIC_IP=.*/PUBLIC_IP=$(curl -s ifconfig.me)/" default.env
+# 시스템 업그레이드
+sudo apt-get -o Dpkg::Options::="--force-confdef" \
+            -o Dpkg::Options::="--force-confold" \
+            upgrade -y || print_error "시스템 업그레이드 실패"
+print_success "필수 패키지 설치 및 시스템 업그레이드 완료"
 
-# 서버 시작/재시작/중지 스크립트 다운로드, 경로설정, 실행 권한 추가
-USERNAME=$(whoami)
-wget https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/regular_maintenance.sh
-chmod +x /home/$(whoami)/palworld-wine/regular_maintenance.sh
-sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/palworld-wine/regular_maintenance.sh
-wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/start.sh
-chmod +x /home/$(whoami)/start.sh
-sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/start.sh
-wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/restart.sh
-chmod +x /home/$(whoami)/restart.sh
-sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/restart.sh
-wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/stop.sh
-chmod +x /home/$(whoami)/stop.sh
-sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/stop.sh
+# =============================================================================
+# Docker 설치
+# =============================================================================
+print_step "Docker 설치"
+if ! getent group docker >/dev/null; then
+    sudo groupadd docker || print_error "Docker 그룹 생성 실패"
+fi
 
-# 서버 디렉토리 생성 및 설정파일 다운로드(Engine.ini 최적화, GameUserSettings.ini 서버저장 디렉토리 지정)
-mkdir -p /home/$(whoami)/palworld-wine/game/Pal/Saved/Config/WindowsServer
-wget -P /home/$(whoami)/palworld-wine/game/Pal/Saved/Config/WindowsServer https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/Engine.ini
-wget -P /home/$(whoami)/palworld-wine/game/Pal/Saved/Config/WindowsServer https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/GameUserSettings.ini
+sudo usermod -aG docker $USER_NAME || print_error "사용자 Docker 그룹 추가 실패"
 
-# 차후 서버이동을 위해 서버저장 폴더 미리 생성(nano 화면에서 새 콘솔창으로 서버데이터 업로드)
-mkdir -p /home/$(whoami)/palworld-wine/game/Pal/Saved/SaveGames/0/0123456789ABCDEF0123456789ABCDEF
+sudo mkdir -p /etc/apt/keyrings || print_error "디렉토리 생성 실패"
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg || print_error "GPG 키 다운로드 실패"
 
-# 모드설치를 위한 UE4SS,unzip 다운로드 및 압축해제
-sudo apt install -y unzip
-mkdir -p /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64
-wget https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip
-unzip UE4SS-Palworld.zip -d "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64"
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+    https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null || print_error "저장소 추가 실패"
+
+sudo apt-get update || print_error "Docker 저장소 업데이트 실패"
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io || print_error "Docker 설치 실패"
+
+# Docker Compose 설치
+DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)"
+sudo curl -L "$DOCKER_COMPOSE_URL" -o /usr/local/bin/docker-compose || print_error "Docker Compose 다운로드 실패"
+sudo chmod +x /usr/local/bin/docker-compose || print_error "Docker Compose 실행 권한 설정 실패"
+
+# Docker 권한 설정
+sudo chmod 666 /var/run/docker.sock || print_warning "Docker 소켓 권한 설정 실패 (재시작 필요)"
+print_success "Docker 및 Docker Compose 설치 완료"
+
+# =============================================================================
+# 서버 파일 다운로드 및 설정
+# =============================================================================
+print_step "팰월드 서버 설정 파일 다운로드"
+mkdir -p "$SERVER_DIR" || print_error "서버 디렉토리 생성 실패"
+cd "$SERVER_DIR" || print_error "디렉토리 이동 실패"
+
+# docker-compose.yml 및 default.env 다운로드
+wget -q "$GITHUB_REPO/docker-compose.yml" -O "$SERVER_DIR/docker-compose.yml" || print_error "docker-compose.yml 다운로드 실패"
+wget -q "$GITHUB_REPO/default.env" -O "$SERVER_DIR/default.env" || print_error "default.env 다운로드 실패"
+
+# 공인 IP 설정
+PUBLIC_IP=$(curl -s ifconfig.me)
+sed -i "s/^PUBLIC_IP=.*/PUBLIC_IP=$PUBLIC_IP/" "$SERVER_DIR/default.env" || print_error "PUBLIC_IP 설정 수정 실패"
+print_success "공인 IP 설정 완료: $PUBLIC_IP"
+
+# =============================================================================
+# 관리 스크립트 설정
+# =============================================================================
+print_step "서버 관리 스크립트 설정"
+
+scripts=(
+    "regular_maintenance.sh"
+    "start.sh"
+    "restart.sh"
+    "stop.sh"
+)
+
+for script in "${scripts[@]}"; do
+    wget -q "$GITHUB_REPO/$script" -O "$USER_HOME/$script" || print_error "$script 다운로드 실패"
+    chmod +x "$USER_HOME/$script" || print_error "$script 실행 권한 설정 실패"
+    sed -i "s/YOUR_USERNAME/$USER_NAME/g" "$USER_HOME/$script" || print_error "$script 사용자 이름 수정 실패"
+done
+
+# 정기 관리 스크립트 경로 수정
+sed -i "s|palworld-wine/regular_maintenance.sh|$USER_HOME/regular_maintenance.sh|g" "$USER_HOME/regular_maintenance.sh" || print_error "정기 관리 스크립트 경로 수정 실패"
+print_success "관리 스크립트 설정 완료"
+
+# =============================================================================
+# 게임 디렉토리 구조 생성
+# =============================================================================
+print_step "게임 디렉토리 구조 생성"
+mkdir -p "$CONFIG_DIR" || print_error "설정 디렉토리 생성 실패"
+mkdir -p "$SAVE_DIR" || print_error "저장 디렉토리 생성 실패"
+mkdir -p "$BINARIES_DIR" || print_error "실행 파일 디렉토리 생성 실패"
+
+# 설정 파일 다운로드
+wget -q "$GITHUB_REPO/Engine.ini" -O "$CONFIG_DIR/Engine.ini" || print_error "Engine.ini 다운로드 실패"
+wget -q "$GITHUB_REPO/GameUserSettings.ini" -O "$CONFIG_DIR/GameUserSettings.ini" || print_error "GameUserSettings.ini 다운로드 실패"
+print_success "기본 설정 파일 다운로드 완료"
+
+# =============================================================================
+# 모드 설치
+# =============================================================================
+print_step "게임 모드 설치"
+
+# UE4SS 설치
+print_info "UE4SS 설치 중..."
+wget -q https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip || print_error "UE4SS 다운로드 실패"
+unzip -q UE4SS-Palworld.zip -d "$BINARIES_DIR" || print_error "UE4SS 압축 해제 실패"
 shopt -s dotglob
-mv /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/UE4SS-Palworld/* /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/
+mv "$BINARIES_DIR/UE4SS-Palworld/"* "$BINARIES_DIR" || print_error "UE4SS 파일 이동 실패"
 shopt -u dotglob
-rm -r /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/UE4SS-Palworld
-rm UE4SS-Palworld.zip
+rm -r "$BINARIES_DIR/UE4SS-Palworld" || print_warning "UE4SS 임시 폴더 삭제 실패"
+rm UE4SS-Palworld.zip || print_warning "UE4SS ZIP 파일 삭제 실패"
+print_success "UE4SS 설치 완료"
 
-# 팰디펜더 최신버전 다운로드 및 압축해제
-wget https://github.com/Ultimeit/PalDefender/releases/latest/download/PalDefender_ProtonWine.zip
-unzip PalDefender_ProtonWine.zip -d "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64"
-rm PalDefender_ProtonWine.zip
-mkdir -p /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender
-wget -P /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/Config.json
-sed -i "s|127.0.0.1|$(who | awk '{print $5}' | tr -d '()')|g" /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender/Config.json
+# 팰디펜더 설치
+print_info "팰디펜더 설치 중..."
+wget -q https://github.com/Ultimeit/PalDefender/releases/latest/download/PalDefender_ProtonWine.zip || print_error "팰디펜더 다운로드 실패"
+unzip -q PalDefender_ProtonWine.zip -d "$BINARIES_DIR" || print_error "팰디펜더 압축 해제 실패"
+rm PalDefender_ProtonWine.zip || print_warning "팰디펜더 ZIP 파일 삭제 실패"
 
-# 팰디펜더 운영자 IP 등록 스크립트 추가
-wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/admin.sh
-chmod +x /home/$(whoami)/admin.sh
+# 팰디펜더 설정 파일
+mkdir -p "$BINARIES_DIR/PalDefender" || print_error "팰디펜더 디렉토리 생성 실패"
+wget -q "$GITHUB_REPO/Config.json" -O "$BINARIES_DIR/PalDefender/Config.json" || print_error "Config.json 다운로드 실패"
 
-# 팰셰마 최신버전 다운로드 및 압축해제
-wget https://github.com/Okaetsu/PalSchema/releases/download/0.4.2/PalSchema_0.4.2.zip
-unzip PalSchema_0.4.2.zip -d "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods/"
-rm PalSchema_0.4.2.zip
+# 운영자 IP 설정
+USER_IP=$(who | awk '{print $5}' | tr -d '()' | head -1)
+sed -i "s|127.0.0.1|$USER_IP|g" "$BINARIES_DIR/PalDefender/Config.json" || print_error "팰디펜더 IP 설정 실패"
+print_success "팰디펜더 설치 완료 (운영자 IP: $USER_IP)"
 
-# 모드관리 편의를 위한 심볼릭링크 
-mkdir -p /home/bykim_bim/palworld-wine/game/Pal/Content/Paks/LogicMods
-ln -s /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods "/home/$(whoami)/>>> UE4SS 모드 <<<"
-chmod +x "/home/$(whoami)/>>> UE4SS 모드 <<<"
-ln -s /home/$(whoami)/palworld-wine/game/Pal/Content/Paks/LogicMods "/home/$(whoami)/>>> PAK 모드 <<<"
-chmod +x "/home/$(whoami)/>>> PAK 모드 <<<"
-ln -s /home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender "/home/$(whoami)/>>> 팰디펜더 <<<"
-chmod +x "/home/$(whoami)/>>> 팰디펜더 <<<"
-ln -s /home/$(whoami)/ "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods/>>> 처음으로 돌아가기 <<<"
-chmod +x "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/ue4ss/Mods/>>> 처음으로 돌아가기 <<<"
-ln -s /home/$(whoami)/ "/home/$(whoami)/palworld-wine/game/Pal/Content/Paks/LogicMods/>>> 처음으로 돌아가기 <<<"
-chmod +x "/home/$(whoami)/palworld-wine/game/Pal/Content/Paks/LogicMods/>>> 처음으로 돌아가기 <<<"
-ln -s /home/$(whoami)/ "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender/>>> 처음으로 돌아가기 <<<"
-chmod +x "/home/$(whoami)/palworld-wine/game/Pal/Binaries/Win64/PalDefender/>>> 처음으로 돌아가기 <<<"
+# 팰디펜더 운영자 스크립트
+wget -q "$GITHUB_REPO/admin.sh" -O "$USER_HOME/admin.sh" || print_error "admin.sh 다운로드 실패"
+chmod +x "$USER_HOME/admin.sh" || print_error "admin.sh 실행 권한 설정 실패"
 
-# 서버설정 수정
-nano default.env
+# 팰셰마 설치
+print_info "팰셰마 설치 중..."
+wget -q https://github.com/Okaetsu/PalSchema/releases/download/0.4.2/PalSchema_0.4.2.zip || print_error "팰셰마 다운로드 실패"
+unzip -q PalSchema_0.4.2.zip -d "$MODS_DIR" || print_error "팰셰마 압축 해제 실패"
+rm PalSchema_0.4.2.zip || print_warning "팰셰마 ZIP 파일 삭제 실패"
+print_success "팰셰마 설치 완료"
 
-# 팰월드 서버 재시작 설정 스크립트 다운로드 및 실행
-wget -P /home/$(whoami) https://raw.githubusercontent.com/palbungi/palworld-wine/refs/heads/main/timer.sh
-chmod +x /home/$(whoami)/timer.sh
-sed -i "s/YOUR_USERNAME/$USERNAME/g" /home/$USERNAME/timer.sh
-echo "화면을 지웁니다..."
+# =============================================================================
+# 심볼릭 링크 생성 (모드 관리 편의)
+# =============================================================================
+print_step "모드 관리 심볼릭 링크 생성"
+
+create_symlink() {
+    local target="$1"
+    local link_name="$2"
+    
+    if [ -L "$link_name" ]; then
+        rm "$link_name" || print_warning "기존 링크 삭제 실패: $link_name"
+    fi
+    
+    ln -s "$target" "$link_name" || print_error "링크 생성 실패: $target → $link_name"
+    chmod +x "$link_name" || print_warning "링크 실행 권한 설정 실패: $link_name"
+}
+
+# 모드 관리 링크
+create_symlink "$MODS_DIR" "$USER_HOME/>>> UE4SS 모드 <<<"
+create_symlink "$GAME_DIR/Pal/Content/Paks/LogicMods" "$USER_HOME/>>> PAK 모드 <<<"
+create_symlink "$BINARIES_DIR/PalDefender" "$USER_HOME/>>> 팰디펜더 <<<"
+
+# 돌아가기 링크
+create_symlink "$USER_HOME" "$MODS_DIR/>>> 처음으로 돌아가기 <<<"
+create_symlink "$USER_HOME" "$GAME_DIR/Pal/Content/Paks/LogicMods/>>> 처음으로 돌아가기 <<<"
+create_symlink "$USER_HOME" "$BINARIES_DIR/PalDefender/>>> 처음으로 돌아가기 <<<"
+
+print_success "모드 관리 링크 생성 완료"
+
+# =============================================================================
+# 서버 설정 수정
+# =============================================================================
+print_step "서버 설정 수정"
+echo -e "\n${ORANGE}${BOLD}=== 서버 설정 편집기 실행 ===${NC}"
+echo -e "• 현재 공인 IP: ${BLUE}$PUBLIC_IP${NC}"
+echo -e "• 필수 설정 항목:"
+echo -e "  - ${CYAN}SERVER_PASSWORD${NC}: 서버 접속 비밀번호"
+echo -e "  - ${CYAN}ADMIN_PASSWORD${NC}: 관리자 비밀번호"
+echo -e "  - ${CYAN}SERVER_NAME${NC}: 서버 이름"
+echo -e "\n${YELLOW}편집을 마치면 ${ORANGE}Ctrl+O${YELLOW}, ${GREEN}Enter${YELLOW}, ${RED}Ctrl+X${YELLOW} 를 눌러 저장하세요.${NC}"
+sleep 3
+
+nano "$SERVER_DIR/default.env" || print_error "설정 파일 편집 실패"
+
+# =============================================================================
+# 정기 재시작 설정
+# =============================================================================
+print_step "정기 재시작 작업 설정"
+wget -q "$GITHUB_REPO/timer.sh" -O "$USER_HOME/timer.sh" || print_error "타이머 스크립트 다운로드 실패"
+chmod +x "$USER_HOME/timer.sh" || print_error "스크립트 실행 권한 설정 실패"
+sed -i "s/YOUR_USERNAME/$USER_NAME/g" "$USER_HOME/timer.sh" || print_error "스크립트 경로 수정 실패"
+
+print_info "화면을 지웁니다..."
 sleep 1
 clear
-bash /home/$(whoami)/timer.sh
-sudo systemctl start cron
-sudo systemctl enable cron
 
+bash "$USER_HOME/timer.sh" || print_error "cron 작업 설정 실패"
+sudo systemctl restart cron || print_error "cron 서비스 재시작 실패"
+sudo systemctl enable cron || print_error "cron 서비스 활성화 실패"
+print_success "정기 재시작 작업 설정 완료"
 
+# =============================================================================
 # 팰월드 서버 시작
-docker-compose -f /home/$(whoami)/palworld-wine/docker-compose.yml up -d
+# =============================================================================
+print_step "팰월드 서버 시작"
+docker-compose -f "$SERVER_DIR/docker-compose.yml" up -d || print_error "서버 시작 실패"
+print_info "서버가 시작 중입니다. 완전히 준비되기까지 5-10분이 소요될 수 있습니다."
 
-# Portainer 설치 및 실행(웹에서 서버관리) - 삭제 유무 결정중
-# mkdir /home/$(whoami)/palworld-wine/portainer
-# wget -P /home/$(whoami)/palworld-wine/portainer https://raw.githubusercontent.com/palbungi/palworld-googlecloud/refs/heads/main/portainer/docker-compose.yml
-# docker-compose -f /home/$(whoami)/palworld-wine/portainer/docker-compose.yml up -d
-
-# 초보들을 위한 Portainer 접속 IP 안내
+# =============================================================================
+# 설치 완료 메시지
+# =============================================================================
 clear
-# echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
-# echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
-# echo "인터넷창을 열고 접속해주세요: $(curl -s ifconfig.me):8888"
-echo "게임서버 접속 아이피: $(curl -s ifconfig.me):8211"
-echo "위 주소들을 메모 해주세요. 게임서버는 최소 5분 후 접속해주세요."
+echo -e "\n${MAGENTA}${BOLD}================================================"
+echo -e "       팰월드 서버 설치 완료! (Wine 버전)"
+echo -e "================================================${NC}"
 
-# 설치파일 삭제
-rm /home/$(whoami)/pb
+# 서버 접속 정보 추출
+SERVER_IP=$(curl -s ifconfig.me)
+SERVER_PASSWORD=$(grep '^SERVER_PASSWORD=' "$SERVER_DIR/default.env" | cut -d '=' -f2- | tr -d '"')
+ADMIN_PASSWORD=$(grep '^ADMIN_PASSWORD=' "$SERVER_DIR/default.env" | cut -d '=' -f2- | tr -d '"')
+SERVER_NAME=$(grep '^SERVER_NAME=' "$SERVER_DIR/default.env" | cut -d '=' -f2- | tr -d '"')
+
+# 게임 서버 접속 정보 출력
+echo -e "\n${GREEN}${BOLD}■ 게임 서버 정보${NC}"
+echo -e "  ${CYAN}서버 이름: ${YELLOW}${SERVER_NAME:-[미설정]}${NC}"
+echo -e "  ${CYAN}서버 주소: ${YELLOW}${SERVER_IP}:8211${NC}"
+
+if [ -n "$SERVER_PASSWORD" ]; then
+    echo -e "  ${CYAN}접속 비밀번호: ${YELLOW}${SERVER_PASSWORD}${NC}"
+else
+    echo -e "  ${RED}※ 주의: 비밀번호가 설정되지 않았습니다!${NC}"
+fi
+
+if [ -n "$ADMIN_PASSWORD" ]; then
+    echo -e "  ${CYAN}관리자 비밀번호: ${YELLOW}${ADMIN_PASSWORD}${NC}"
+else
+    echo -e "  ${RED}※ 주의: 관리자 비밀번호가 설정되지 않았습니다!${NC}"
+fi
+
+# 관리 도구 정보 출력
+echo -e "\n${GREEN}${BOLD}■ 관리 도구${NC}"
+echo -e "  ${CYAN}서버 시작: ${BLUE}./start.sh${NC}"
+echo -e "  ${CYAN}서버 재시작: ${BLUE}./restart.sh${NC}"
+echo -e "  ${CYAN}서버 중지: ${BLUE}./stop.sh${NC}"
+echo -e "  ${CYAN}정기 관리: ${BLUE}./regular_maintenance.sh${NC}"
+echo -e "  ${CYAN}운영자 추가: ${BLUE}./admin.sh [IP]${NC}"
+
+# 모드 관리 정보 출력
+echo -e "\n${GREEN}${BOLD}■ 모드 관리${NC}"
+echo -e "  ${CYAN}UE4SS 모드: ${BLUE}$USER_HOME/>>> UE4SS 모드 <<<${NC}"
+echo -e "  ${CYAN}PAK 모드: ${BLUE}$USER_HOME/>>> PAK 모드 <<<${NC}"
+echo -e "  ${CYAN}팰디펜더 설정: ${BLUE}$USER_HOME/>>> 팰디펜더 <<<${NC}"
+
+# 중요 정보 출력
+echo -e "\n${ORANGE}${BOLD}■ 중요 정보${NC}"
+echo -e " 1. 서버 완전 시작까지 ${YELLOW}5-10분${NC} 소요 (게임 접속 전 대기 필요)"
+echo -e " 2. 서버 설정 파일: ${CYAN}$SERVER_DIR/default.env${NC}"
+echo -e " 3. 서버 로그 확인: ${CYAN}docker-compose -f $SERVER_DIR/docker-compose.yml logs${NC}"
+echo -e " 4. 정기 재시작 설정 확인: ${CYAN}crontab -l${NC}"
+
+# 보안 상태 메시지
+if [ -z "$SERVER_PASSWORD" ]; then
+    echo -e "\n${RED}${BOLD}※ 보안 경고: 비밀번호가 설정되지 않아 공개 서버입니다!${NC}"
+    echo -e "   ${YELLOW}default.env 파일에서 SERVER_PASSWORD를 설정해주세요${NC}"
+else
+    echo -e "\n${GREEN}${BOLD}※ 보안: 비밀번호가 설정된 비공개 서버입니다${NC}"
+fi
+
+if [ -z "$ADMIN_PASSWORD" ]; then
+    echo -e "\n${RED}${BOLD}※ 보안 경고: 관리자 비밀번호가 설정되지 않았습니다!${NC}"
+    echo -e "   ${YELLOW}default.env 파일에서 ADMIN_PASSWORD를 설정해주세요${NC}"
+fi
+
+# 종료 메시지
+echo -e "\n${MAGENTA}${BOLD}이 창은 닫아도 됩니다. 즐거운 게임 되세요!${NC}"
+echo -e "${MAGENTA}${BOLD}================================================${NC}"
+
+# 설치 파일 정리
+rm -f "$USER_HOME/pb" || print_warning "설치 파일 삭제 실패"
