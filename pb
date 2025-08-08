@@ -311,15 +311,9 @@ print_step "정기 재시작 작업 설정"
 wget -q "$GITHUB_REPO/timer.sh" -O "$USER_HOME/timer.sh" || print_error "타이머 스크립트 다운로드 실패"
 chmod +x "$USER_HOME/timer.sh" || print_error "스크립트 실행 권한 설정 실패"
 sed -i "s/YOUR_USERNAME/$USER_NAME/g" "$USER_HOME/timer.sh" || print_error "스크립트 경로 수정 실패"
-
-print_info "화면을 지웁니다..."
-sleep 1
-clear
-
 bash "$USER_HOME/timer.sh" || print_error "cron 작업 설정 실패"
 sudo systemctl restart cron || print_error "cron 서비스 재시작 실패"
 sudo systemctl enable cron || print_error "cron 서비스 활성화 실패"
-print_success "정기 재시작 작업 설정 완료"
 
 # =============================================================================
 # 팰월드 서버 시작
