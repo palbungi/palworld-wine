@@ -65,7 +65,7 @@ fi
 while true; do
     echo -e "${MAGENTA}${BOLD}■ 재시작 스케줄 설정 방법 선택${NC}"
     echo -e "  ${BLUE}0. 재시작 스케줄 삭제 (재시작 기능 비활성화)${NC}"
-    echo -e "  ${GREEN}1. 횟수 기반 자동 스케줄 설정 (24시간 균등 분할)${NC}"
+    echo -e "  ${GREEN}${BOLD}1. 횟수 기반 자동 스케줄 설정 (*추천)${NC}"
     echo -e "  ${YELLOW}2. 시간 직접 입력 (사용자 지정 스케줄)${NC}"
     echo ""
     
