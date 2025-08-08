@@ -360,8 +360,7 @@ echo -e "\n${GREEN}${BOLD}■ 관리 도구${NC}"
 echo -e "  ${CYAN}서버 시작: ${BLUE}./start.sh${NC}"
 echo -e "  ${CYAN}서버 재시작: ${BLUE}./restart.sh${NC}"
 echo -e "  ${CYAN}서버 중지: ${BLUE}./stop.sh${NC}"
-echo -e "  ${CYAN}정기 관리: ${BLUE}./regular_maintenance.sh${NC}"
-echo -e "  ${CYAN}운영자 추가: ${BLUE}./admin.sh [IP]${NC}"
+echo -e "  ${CYAN}운영자 추가: ${BLUE}./admin.sh${NC}"
 
 # 모드 관리 정보 출력
 echo -e "\n${GREEN}${BOLD}■ 모드 관리${NC}"
