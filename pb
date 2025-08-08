@@ -300,7 +300,7 @@ echo -e "  - ${CYAN}SERVER_PASSWORD${NC}: 서버 접속 비밀번호"
 echo -e "  - ${CYAN}ADMIN_PASSWORD${NC}: 관리자 비밀번호"
 echo -e "  - ${CYAN}SERVER_NAME${NC}: 서버 이름"
 echo -e "\n${YELLOW}편집을 마치면 ${ORANGE}Ctrl+O${YELLOW}, ${GREEN}Enter${YELLOW}, ${RED}Ctrl+X${YELLOW} 를 눌러 저장하세요.${NC}"
-sleep 3
+sleep 10
 
 nano "$SERVER_DIR/default.env" || print_error "설정 파일 편집 실패"
 
