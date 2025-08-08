@@ -221,7 +221,7 @@ while true; do
                 echo -e "  ${YELLOW}${BOLD}• $TIME_12H${NC}"
             else
                 # 오후 시간 (12:00 ~ 23:59)
-                echo -e "  ${GREEN}${BOLD}• $TIME_12H${NC}"
+                echo -e "  ${BLUE}${BOLD}• $TIME_12H${NC}"
             fi
             
             # 크론 항목 추가
