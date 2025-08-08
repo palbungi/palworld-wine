@@ -172,7 +172,7 @@ mkdir -p "$CONFIG_DIR" || print_error "설정 디렉토리 생성 실패"
 mkdir -p "$SAVE_DIR" || print_error "저장 디렉토리 생성 실패"
 mkdir -p "$BINARIES_DIR" || print_error "실행 파일 디렉토리 생성 실패"
 
-# LogicMods 디렉토리 생성 (추가된 부분)
+# LogicMods 디렉토리 생성
 mkdir -p "$LOGIC_MODS_DIR" || print_error "LogicMods 디렉토리 생성 실패"
 print_success "LogicMods 디렉토리 생성: $LOGIC_MODS_DIR"
 
@@ -182,7 +182,7 @@ wget -q "$GITHUB_REPO/GameUserSettings.ini" -O "$CONFIG_DIR/GameUserSettings.ini
 print_success "기본 설정 파일 다운로드 완료"
 
 # =============================================================================
-# 모드 설치 (UE4SS 설치 부분 수정)
+# 모드 설치 (UE4SS 및 팰셰마)
 # =============================================================================
 print_step "게임 모드 설치"
 
@@ -190,42 +190,55 @@ print_step "게임 모드 설치"
 print_info "UE4SS 설치 중..."
 wget -q https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip || print_error "UE4SS 다운로드 실패"
 unzip -q UE4SS-Palworld.zip -d "$BINARIES_DIR" || print_error "UE4SS 압축 해제 실패"
-
-# 기존 파일 덮어쓰기 옵션 추가 (-f)
 shopt -s dotglob
 mv -f "$BINARIES_DIR/UE4SS-Palworld/"* "$BINARIES_DIR" || print_error "UE4SS 파일 이동 실패"
 shopt -u dotglob
-
-# 임시 디렉토리 정리
-rm -rf "$BINARIES_DIR/UE4SS-Palworld" || print_warning "UE4SS 임시 폴더 삭제 실패"
-rm UE4SS-Palworld.zip || print_warning "UE4SS ZIP 파일 삭제 실패"
+rm -rf "$BINARIES_DIR/UE4SS-Palworld" UE4SS-Palworld.zip || print_warning "임시 파일 삭제 실패"
 print_success "UE4SS 설치 완료"
 
-# 팰디펜더 설치
-print_info "팰디펜더 설치 중..."
-wget -q https://github.com/Ultimeit/PalDefender/releases/latest/download/PalDefender_ProtonWine.zip || print_error "팰디펜더 다운로드 실패"
-unzip -q PalDefender_ProtonWine.zip -d "$BINARIES_DIR" || print_error "팰디펜더 압축 해제 실패"
-rm PalDefender_ProtonWine.zip || print_warning "팰디펜더 ZIP 파일 삭제 실패"
-
-# 팰디펜더 설정 파일
-mkdir -p "$BINARIES_DIR/PalDefender" || print_error "팰디펜더 디렉토리 생성 실패"
-wget -q "$GITHUB_REPO/Config.json" -O "$BINARIES_DIR/PalDefender/Config.json" || print_error "Config.json 다운로드 실패"
-
-# 운영자 IP 설정
-USER_IP=$(who | awk '{print $5}' | tr -d '()' | head -1)
-sed -i "s|127.0.0.1|$USER_IP|g" "$BINARIES_DIR/PalDefender/Config.json" || print_error "팰디펜더 IP 설정 실패"
-print_success "팰디펜더 설치 완료 (운영자 IP: $USER_IP)"
-
-# 팰디펜더 운영자 스크립트
-wget -q "$GITHUB_REPO/admin.sh" -O "$USER_HOME/admin.sh" || print_error "admin.sh 다운로드 실패"
-chmod +x "$USER_HOME/admin.sh" || print_error "admin.sh 실행 권한 설정 실패"
-
-# 팰셰마 설치
+# 팰셰마 설치 (필수)
 print_info "팰셰마 설치 중..."
 wget -q https://github.com/Okaetsu/PalSchema/releases/download/0.4.2/PalSchema_0.4.2.zip || print_error "팰셰마 다운로드 실패"
 unzip -q PalSchema_0.4.2.zip -d "$MODS_DIR" || print_error "팰셰마 압축 해제 실패"
 rm PalSchema_0.4.2.zip || print_warning "팰셰마 ZIP 파일 삭제 실패"
 print_success "팰셰마 설치 완료"
+
+# =============================================================================
+# 팰디펜더 설치 (사용자 선택)
+# =============================================================================
+echo -e "\n${RED}${BOLD}======================================================================="
+echo -e "■ 팰디펜더 설치 선택${NC}"
+echo -e "${CYAN}팰디펜더는 복사/핵 사용자를 감지하는 보안 모드로, 다음과 같은 기능을 제공합니다:${NC}"
+echo -e " • ${GREEN}이상 행동 감지${NC} (순간이동, 비정상 속도 등)"
+echo -e " • ${GREEN}불법 아이템 사용 감지${NC}"
+echo -e " • ${GREEN}실시간 경고 시스템${NC}"
+echo -e " • ${YELLOW}${BOLD}운영자 권한으로 아이템 및 팰 생성${NC}"
+echo -e "${RED}※ 주의: 팰디펜더 설치 시 서버 성능이 약 5~10% 감소할 수 있습니다!${NC}"
+echo -e "=======================================================================${NC}"
+
+read -p "팰디펜더를 설치하시겠습니까? [y/N] " INSTALL_DEFENDER
+if [[ $INSTALL_DEFENDER =~ [Yy] ]]; then
+    print_step "팰디펜더 설치 시작"
+    print_info "팰디펜더 설치 중..."
+    wget -q https://github.com/Ultimeit/PalDefender/releases/latest/download/PalDefender_ProtonWine.zip || print_error "팰디펜더 다운로드 실패"
+    unzip -q PalDefender_ProtonWine.zip -d "$BINARIES_DIR" || print_error "팰디펜더 압축 해제 실패"
+    rm PalDefender_ProtonWine.zip || print_warning "팰디펜더 ZIP 파일 삭제 실패"
+    
+    mkdir -p "$BINARIES_DIR/PalDefender" || print_error "팰디펜더 디렉토리 생성 실패"
+    wget -q "$GITHUB_REPO/Config.json" -O "$BINARIES_DIR/PalDefender/Config.json" || print_error "Config.json 다운로드 실패"
+    
+    USER_IP=$(who | awk '{print $5}' | tr -d '()' | head -1)
+    sed -i "s|127.0.0.1|$USER_IP|g" "$BINARIES_DIR/PalDefender/Config.json" || print_error "팰디펜더 IP 설정 실패"
+    print_success "팰디펜더 설치 완료 (운영자 IP: $USER_IP)"
+    
+    # 팰디펜더 운영자 스크립트
+    wget -q "$GITHUB_REPO/admin.sh" -O "$USER_HOME/admin.sh" || print_error "admin.sh 다운로드 실패"
+    chmod +x "$USER_HOME/admin.sh" || print_error "admin.sh 실행 권한 설정 실패"
+else
+    print_warning "팰디펜더 설치를 건너뜁니다."
+    # 기존 팰디펜더 파일 삭제 (이미 존재할 경우)
+    rm -rf "$BINARIES_DIR/PalDefender" "$USER_HOME/admin.sh" 2>/dev/null || true
+fi
 
 # =============================================================================
 # 심볼릭 링크 생성 (모드 관리 편의)
@@ -252,26 +265,23 @@ create_symlink() {
     ln -s "$target" "$link_name" || print_warning "링크 생성 실패: $target → $link_name"
 }
 
-# UE4SS 모드 링크
+# UE4SS 모드 링크 (항상 생성)
 if [ -d "$MODS_DIR" ]; then
     create_symlink "$MODS_DIR" "$USER_HOME/>>> UE4SS 모드 <<<"
 else
     print_warning "UE4SS 모드 디렉토리가 존재하지 않아 링크를 생성하지 않습니다: $MODS_DIR"
 fi
 
-# PAK 모드 링크 (LogicMods 디렉토리 사용)
+# PAK 모드 링크 (항상 생성)
 if [ -d "$LOGIC_MODS_DIR" ]; then
     create_symlink "$LOGIC_MODS_DIR" "$USER_HOME/>>> PAK 모드 <<<"
 else
     print_warning "PAK 모드 디렉토리가 존재하지 않아 링크를 생성하지 않습니다: $LOGIC_MODS_DIR"
 fi
 
-# 팰디펜더 링크
-PALDEFENDER_DIR="$BINARIES_DIR/PalDefender"
-if [ -d "$PALDEFENDER_DIR" ]; then
-    create_symlink "$PALDEFENDER_DIR" "$USER_HOME/>>> 팰디펜더 <<<"
-else
-    print_warning "팰디펜더 디렉토리가 존재하지 않아 링크를 생성하지 않습니다: $PALDEFENDER_DIR"
+# 팰디펜더 링크 (설치한 경우에만)
+if [[ $INSTALL_DEFENDER =~ [Yy] ]] && [ -d "$BINARIES_DIR/PalDefender" ]; then
+    create_symlink "$BINARIES_DIR/PalDefender" "$USER_HOME/>>> 팰디펜더 <<<"
 fi
 
 # 돌아가기 링크 (대상 디렉토리가 없으면 생성하지 않음)
@@ -283,8 +293,8 @@ if [ -d "$LOGIC_MODS_DIR" ]; then
     ln -s "$USER_HOME" "$LOGIC_MODS_DIR/>>> 처음으로 돌아가기 <<<" 2>/dev/null || print_warning "돌아가기 링크 생성 실패: PAK 모드"
 fi
 
-if [ -d "$PALDEFENDER_DIR" ]; then
-    ln -s "$USER_HOME" "$PALDEFENDER_DIR/>>> 처음으로 돌아가기 <<<" 2>/dev/null || print_warning "돌아가기 링크 생성 실패: 팰디펜더"
+if [[ $INSTALL_DEFENDER =~ [Yy] ]] && [ -d "$BINARIES_DIR/PalDefender" ]; then
+    ln -s "$USER_HOME" "$BINARIES_DIR/PalDefender/>>> 처음으로 돌아가기 <<<" 2>/dev/null || print_warning "돌아가기 링크 생성 실패: 팰디펜더"
 fi
 
 print_success "모드 관리 링크 생성 완료 (일부 실패 항목 있을 수 있음)"
@@ -358,13 +368,21 @@ echo -e "\n${GREEN}${BOLD}■ 관리 도구${NC}"
 echo -e "  ${CYAN}서버 시작: ${BLUE}./start.sh${NC}"
 echo -e "  ${CYAN}서버 재시작: ${BLUE}./restart.sh${NC}"
 echo -e "  ${CYAN}서버 중지: ${BLUE}./stop.sh${NC}"
-echo -e "  ${CYAN}운영자 추가: ${BLUE}./admin.sh${NC}"
+
+# 팰디펜더 설치 여부에 따라 스크립트 표시
+if [[ $INSTALL_DEFENDER =~ [Yy] ]]; then
+    echo -e "  ${CYAN}운영자 추가: ${BLUE}./admin.sh${NC}"
+fi
 
 # 모드 관리 정보 출력
 echo -e "\n${GREEN}${BOLD}■ 모드 관리${NC}"
 echo -e "  ${CYAN}UE4SS 모드: ${BLUE}$USER_HOME/>>> UE4SS 모드 <<<${NC}" | grep -v 'cannot access'
 echo -e "  ${CYAN}PAK 모드: ${BLUE}$USER_HOME/>>> PAK 모드 <<<${NC}" | grep -v 'cannot access'
-echo -e "  ${CYAN}팰디펜더 설정: ${BLUE}$USER_HOME/>>> 팰디펜더 <<<${NC}" | grep -v 'cannot access'
+
+# 팰디펜더 설치 시에만 표시
+if [[ $INSTALL_DEFENDER =~ [Yy] ]]; then
+    echo -e "  ${CYAN}팰디펜더 설정: ${BLUE}$USER_HOME/>>> 팰디펜더 <<<${NC}" | grep -v 'cannot access'
+fi
 
 # 중요 정보 출력
 echo -e "\n${ORANGE}${BOLD}■ 중요 정보${NC}"
@@ -384,6 +402,14 @@ fi
 if [ -z "$ADMIN_PASSWORD" ]; then
     echo -e "\n${RED}${BOLD}※ 보안 경고: 관리자 비밀번호가 설정되지 않았습니다!${NC}"
     echo -e "   ${YELLOW}default.env 파일에서 ADMIN_PASSWORD를 설정해주세요${NC}"
+fi
+
+# 팰디펜더 설치 여부 표시
+if [[ $INSTALL_DEFENDER =~ [Yy] ]]; then
+    echo -e "\n${CYAN}※ 팰디펜더가 설치되었습니다:${NC} 복사/핵 사용자 감시 기능 활성화"
+    echo -e "  - ${RED}※ 주의: 서버 성능이 약 5~10% 감소할 수 있습니다${NC}"
+else
+    echo -e "\n${YELLOW}※ 팰디펜더가 설치되지 않았습니다: 보안 기능이 제한됩니다${NC}"
 fi
 
 # 종료 메시지
