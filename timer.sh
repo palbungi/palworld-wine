@@ -79,6 +79,21 @@ convert_to_12h() {
     echo "[$period] $hour_str:$min_str"
 }
 
+# 기존 크론 작업 삭제 함수
+remove_existing_cron_jobs() {
+    echo -e "${YELLOW}${BOLD}기존 재시작 스케줄을 삭제합니다...${NC}"
+    
+    # 기존 크론 작업에서 스크립트 관련 항목 제거
+    if crontab -l 2>/dev/null | grep -q "$SCRIPT_PATH"; then
+        crontab -l | grep -v "$SCRIPT_PATH" > "$CRON_FILE"
+        crontab "$CRON_FILE"
+        rm -f "$CRON_FILE"
+        print_success "기존 재시작 스케줄이 삭제되었습니다."
+    else
+        echo -e "${BLUE}${BOLD}삭제할 기존 스케줄이 없습니다.${NC}"
+    fi
+}
+
 # =============================================================================
 # 메인 스크립트 시작
 # =============================================================================
@@ -110,12 +125,15 @@ while true; do
 
     # 모드 0: 스케줄 삭제
     if [[ "$MODE" == "0" ]]; then
-        crontab -r
+        remove_existing_cron_jobs
         print_success "모든 재시작 스케줄이 삭제되었습니다."
         exit 0
         
     # 모드 1: 횟수 기반 자동 스케줄
     elif [[ "$MODE" == "1" ]]; then
+        # 기존 스케줄 삭제
+        remove_existing_cron_jobs
+        
         echo -e "\n${GREEN}${BOLD}■ 하루 재시작 횟수 설정${NC}"
         while true; do
             colored_read "▶ 하루에 몇 번 재시작할까요? (0 입력 시 종료): " COUNT
@@ -164,6 +182,9 @@ while true; do
         
     # 모드 2: 시간 직접 입력
     elif [[ "$MODE" == "2" ]]; then
+        # 기존 스케줄 삭제
+        remove_existing_cron_jobs
+        
         echo -e "\n${YELLOW}${BOLD}■ 하루 재시작 횟수 설정${NC}"
         while true; do
             colored_read "▶ 하루에 몇 번 재시작할까요? (0 입력 시 종료): " COUNT
@@ -252,3 +273,11 @@ sudo systemctl restart cron || {
 # 완료 메시지
 # =============================================================================
 print_success "팰월드 서버 재시작 스케줄이 성공적으로 등록되었습니다!"
+
+# 현재 설정된 크론 작업 출력
+echo -e "\n${CYAN}${BOLD}■ 현재 설정된 재시작 일정${NC}"
+crontab -l | grep "$SCRIPT_PATH" || echo -e "${YELLOW}설정된 재시작 스케줄이 없습니다.${NC}"
+
+# 최종 안내 메시지
+echo -e "\n${MAGENTA}${BOLD}※ 서버 재시작은 매일 지정된 시간에 자동으로 수행됩니다"
+echo -e "※ 설정을 변경하려면 이 스크립트를 다시 실행해주세요${NC}"
