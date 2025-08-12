@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Palworld 서버 관리 및 팰셰마 설치 통합 스크립트
-# 버전: 1.0
+# 버전: 1.3
 # 설명: 팰셰마 설치와 Palworld 서버 관리를 자동화하는 스크립트
 
 # ----------------------------------
@@ -89,12 +89,6 @@ install_palschema() {
         print_error "팰셰마 다운로드 실패"
     fi
     
-    # 2. 기존 팰셰마 삭제 (존재하는 경우)
-    if [ -d "${MODS_DIR}/PalSchema" ]; then
-        print_info "기존 팰셰마 제거 중"
-        rm -rf "${MODS_DIR}/PalSchema"
-    fi
-    
     # 3. 압축 해제
     print_info "압축 해제 중: ${MODS_DIR}"
     if ! unzip -q -o "${tmp_dir}/${zip_file}" -d "$MODS_DIR"; then
@@ -102,7 +96,7 @@ install_palschema() {
         print_error "압축 해제 실패"
     fi
     
-    # 4. 정리
+    # 3. 정리
     rm -rf "$tmp_dir"
     print_success "팰셰마 v${PALSCHEMA_VERSION} 설치 완료"
 }
