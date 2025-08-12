@@ -198,9 +198,9 @@ print_success "UE4SS 설치 완료"
 
 # 팰셰마 설치 (필수)
 print_info "팰셰마 설치 중..."
-wget -q https://github.com/Okaetsu/PalSchema/releases/download/0.4.2/PalSchema_0.4.2.zip || print_error "팰셰마 다운로드 실패"
-unzip -q PalSchema_0.4.2.zip -d "$MODS_DIR" || print_error "팰셰마 압축 해제 실패"
-rm PalSchema_0.4.2.zip || print_warning "팰셰마 ZIP 파일 삭제 실패"
+wget -q https://github.com/Okaetsu/PalSchema/releases/download/0.5.0/PalSchema_0.5.0.zip || print_error "팰셰마 다운로드 실패"
+unzip -q PalSchema_0.5.0.zip -d "$MODS_DIR" || print_error "팰셰마 압축 해제 실패"
+rm PalSchema_0.5.0.zip || print_warning "팰셰마 ZIP 파일 삭제 실패"
 print_success "팰셰마 설치 완료"
 
 # =============================================================================
