@@ -190,9 +190,6 @@ print_step "게임 모드 설치"
 print_info "UE4SS 설치 중..."
 wget -q https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip || print_error "UE4SS 다운로드 실패"
 unzip -q UE4SS-Palworld.zip -d "$BINARIES_DIR" || print_error "UE4SS 압축 해제 실패"
-shopt -s dotglob
-mv -f "$BINARIES_DIR/UE4SS-Palworld/"* "$BINARIES_DIR" || print_error "UE4SS 파일 이동 실패"
-shopt -u dotglob
 rm -rf "$BINARIES_DIR/UE4SS-Palworld" UE4SS-Palworld.zip || print_warning "임시 파일 삭제 실패"
 print_success "UE4SS 설치 완료"
 
